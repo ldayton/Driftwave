@@ -1,44 +1,30 @@
-use std::io::Error;
+use std::fmt;
 use std::path::Path;
 
 pub trait Player {
-    fn init(&mut self) -> Result<PlayerHandle, Error>;
+    type Sound;
+    type Playback;
 
-    fn load(&mut self, player_handle: &PlayerHandle, path: &Path) -> Result<AudioHandle, Error>;
+    fn init(&mut self) -> Result<(), PlayerError>;
 
-    fn play(&mut self, player_handle: &PlayerHandle, audio_handle: &AudioHandle) -> Result<PlaybackHandle, Error>;
+    fn load(&mut self, path: &Path) -> Result<Self::Sound, PlayerError>;
 
-    fn pause(&mut self, player_handle: &PlayerHandle, playback_handle: &PlaybackHandle) -> Option<Error>;
+    fn play(&mut self, sound: &mut Self::Sound) -> Result<Self::Playback, PlayerError>;
 
-    fn close(&mut self, player_handle: &PlayerHandle) -> Option<Error>;
+    fn is_playing(&mut self, playback: &mut Self::Playback) -> Result<bool, PlayerError>;
+
+    fn close(&mut self) -> Result<(), PlayerError>;
 }
 
-pub struct FmodPlayer {}
+#[derive(Debug)]
+pub struct PlayerError {
+    pub message: String,
+}
 
-impl Player for FmodPlayer {
-    fn init(&mut self) -> Result<PlayerHandle, Error> {
-        Ok(PlayerHandle {})
-    }
-
-    fn load(&mut self, _player_handle: &PlayerHandle, _path: &Path) -> Result<AudioHandle, Error> {
-        Ok(AudioHandle {})
-    }
-
-    fn play(&mut self, _player_handle: &PlayerHandle, _audio_handle: &AudioHandle) -> Result<PlaybackHandle, Error> {
-        Ok(PlaybackHandle {})
-    }
-
-    fn pause(&mut self, _player_handle: &PlayerHandle, _playback_handle: &PlaybackHandle) -> Option<Error> {
-        None
-    }
-
-    fn close(&mut self, _handle: &PlayerHandle) -> Option<Error> {
-        None
+impl fmt::Display for PlayerError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.message)
     }
 }
 
-pub struct PlayerHandle {}
-
-pub struct AudioHandle {}
-
-pub struct PlaybackHandle {}
+impl std::error::Error for PlayerError {}

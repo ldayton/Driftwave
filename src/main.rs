@@ -1,65 +1,25 @@
 mod ffi;
-use ffi::fmod_sys;
+mod fmod;
+mod player;
 
-use std::ffi::CString;
-use std::ptr;
+use crate::fmod::FmodPlayer;
+use crate::player::Player;
+use std::error::Error;
+use std::path::Path;
 use std::thread;
 use std::time::Duration;
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    unsafe {
-        // Create FMOD system
-        let mut system: *mut fmod_sys::FMOD_SYSTEM = ptr::null_mut();
-        let result = fmod_sys::FMOD_System_Create(&mut system, fmod_sys::FMOD_VERSION as u32);
-        if result != fmod_sys::FMOD_RESULT_FMOD_OK {
-            panic!("Failed to create FMOD system: {}", result);
-        }
+fn main() -> Result<(), Box<dyn Error>> {
+    let mut player = FmodPlayer::new();
+    player.init()?;
 
-        // Initialize FMOD system
-        let result = fmod_sys::FMOD_System_Init(system, 512, fmod_sys::FMOD_INIT_NORMAL, ptr::null_mut());
-        if result != fmod_sys::FMOD_RESULT_FMOD_OK {
-            panic!("Failed to initialize FMOD system: {}", result);
-        }
+    let mut sound = player.load(Path::new("assets/אני פורים.wav"))?;
+    let mut playback = player.play(&mut sound)?;
 
-        // Load sound file
-        let mut sound: *mut fmod_sys::FMOD_SOUND = ptr::null_mut();
-        let filename = CString::new("assets/אני פורים.wav")?;
-        let result = fmod_sys::FMOD_System_CreateSound(
-            system,
-            filename.as_ptr(),
-            fmod_sys::FMOD_DEFAULT,
-            ptr::null_mut(),
-            &mut sound,
-        );
-        if result != fmod_sys::FMOD_RESULT_FMOD_OK {
-            panic!("Failed to load sound: {}", result);
-        }
-
-        // Play the sound
-        let mut channel: *mut fmod_sys::FMOD_CHANNEL = ptr::null_mut();
-        let result = fmod_sys::FMOD_System_PlaySound(
-            system,
-            sound,
-            ptr::null_mut(),
-            0, // not paused
-            &mut channel,
-        );
-        if result != fmod_sys::FMOD_RESULT_FMOD_OK {
-            panic!("Failed to play sound: {}", result);
-        }
-
-        // Wait for playback to finish
-        let mut is_playing: i32 = 1;
-        while is_playing != 0 {
-            fmod_sys::FMOD_Channel_IsPlaying(channel, &mut is_playing);
-            fmod_sys::FMOD_System_Update(system);
-            thread::sleep(Duration::from_millis(10));
-        }
-
-        // Clean up
-        fmod_sys::FMOD_Sound_Release(sound);
-        fmod_sys::FMOD_System_Release(system);
+    while player.is_playing(&mut playback)? {
+        thread::sleep(Duration::from_millis(50));
     }
 
+    player.close()?;
     Ok(())
 }
