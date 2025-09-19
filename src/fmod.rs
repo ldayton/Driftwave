@@ -1,5 +1,5 @@
 use crate::ffi::fmod_sys;
-use crate::player::{Player, PlayerError};
+use crate::player::{PlaybackState, Player, PlayerError};
 
 use std::ffi::CString;
 use std::path::Path;
@@ -20,6 +20,7 @@ impl FmodPlayer {
 impl Player for FmodPlayer {
     type Sound = FmodSound;
     type Playback = FmodPlayback;
+    type PlaybackListener = ();
 
     fn init(&mut self) -> Result<(), PlayerError> {
         unsafe {
@@ -30,7 +31,12 @@ impl Player for FmodPlayer {
                     message: format!("Failed to create FMOD system: {}", result),
                 });
             }
-            let result = fmod_sys::FMOD_System_Init(self.system, 512, fmod_sys::FMOD_INIT_NORMAL, ptr::null_mut());
+            let result = fmod_sys::FMOD_System_Init(
+                self.system,
+                512,
+                fmod_sys::FMOD_INIT_NORMAL,
+                ptr::null_mut(),
+            );
             if result != fmod_sys::FMOD_RESULT_FMOD_OK {
                 return Err(PlayerError {
                     message: format!("Failed to initialize FMOD system: {}", result),
@@ -56,7 +62,7 @@ impl Player for FmodPlayer {
             let result = fmod_sys::FMOD_System_CreateSound(
                 self.system,
                 filename.as_ptr(),
-                fmod_sys::FMOD_DEFAULT,
+                fmod_sys::FMOD_DEFAULT | fmod_sys::FMOD_ACCURATETIME,
                 ptr::null_mut(),
                 &mut sound,
             );
@@ -88,17 +94,76 @@ impl Player for FmodPlayer {
         }
     }
 
-    fn is_playing(&mut self, playback: &mut Self::Playback) -> Result<bool, PlayerError> {
+    fn play_range(
+        &mut self,
+        _sound: &mut Self::Sound,
+        _start_frame: u64,
+        _end_frame: u64,
+    ) -> Result<Self::Playback, PlayerError> {
+        Err(PlayerError {
+            message: "play_range not implemented".to_string(),
+        })
+    }
+
+    fn pause(&mut self, _playback: &mut Self::Playback) -> Result<Self::Playback, PlayerError> {
+        Err(PlayerError {
+            message: "pause not implemented".to_string(),
+        })
+    }
+
+    fn resume(&mut self, _playback: &mut Self::Playback) -> Result<Self::Playback, PlayerError> {
+        Err(PlayerError {
+            message: "resume not implemented".to_string(),
+        })
+    }
+
+    fn get_state(&mut self, playback: &mut Self::Playback) -> Result<PlaybackState, PlayerError> {
         unsafe {
-            let mut is_playing: i32 = 1;
+            let mut is_playing: i32 = 0;
             let result = fmod_sys::FMOD_Channel_IsPlaying(playback.ptr, &mut is_playing);
+
+            if result == fmod_sys::FMOD_RESULT_FMOD_ERR_INVALID_HANDLE
+                || result == fmod_sys::FMOD_RESULT_FMOD_ERR_CHANNEL_STOLEN
+            {
+                return Ok(PlaybackState::Invalid);
+            }
+
             if result != fmod_sys::FMOD_RESULT_FMOD_OK {
                 return Err(PlayerError {
-                    message: format!("Failed to check playback status: {}", result),
+                    message: format!("Failed to get channel state: {}", result),
                 });
             }
-            Ok(is_playing != 0)
+
+            if is_playing == 0 {
+                return Ok(PlaybackState::Stopped);
+            }
+
+            let mut is_paused: i32 = 0;
+            let result = fmod_sys::FMOD_Channel_GetPaused(playback.ptr, &mut is_paused);
+            if result != fmod_sys::FMOD_RESULT_FMOD_OK {
+                return Err(PlayerError {
+                    message: format!("Failed to get paused state: {}", result),
+                });
+            }
+
+            if is_paused != 0 {
+                Ok(PlaybackState::Paused)
+            } else {
+                Ok(PlaybackState::Playing)
+            }
         }
+    }
+
+    fn add_playback_listener(&mut self) -> Result<(), PlayerError> {
+        Err(PlayerError {
+            message: "add_playback_listener not implemented".to_string(),
+        })
+    }
+
+    fn remove_playback_listener(&mut self) -> Result<(), PlayerError> {
+        Err(PlayerError {
+            message: "remove_playback_listener not implemented".to_string(),
+        })
     }
 
     fn close(&mut self) -> Result<(), PlayerError> {

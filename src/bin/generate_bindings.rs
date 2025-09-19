@@ -17,7 +17,9 @@ fn main() {
         .expect("Unable to generate bindings");
 
     let out_path = PathBuf::from("src/ffi/fmod_sys.rs");
-    bindings.write_to_file(&out_path).expect("Couldn't write bindings!");
+    bindings
+        .write_to_file(&out_path)
+        .expect("Couldn't write bindings!");
 
     // Add #![allow(warnings)] after the header comment
     let content = fs::read_to_string(&out_path).expect("Failed to read generated file");

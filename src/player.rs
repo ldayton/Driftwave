@@ -1,9 +1,12 @@
+#![allow(dead_code)]
+
 use std::fmt;
 use std::path::Path;
 
 pub trait Player {
     type Sound;
     type Playback;
+    type PlaybackListener;
 
     fn init(&mut self) -> Result<(), PlayerError>;
 
@@ -11,9 +14,47 @@ pub trait Player {
 
     fn play(&mut self, sound: &mut Self::Sound) -> Result<Self::Playback, PlayerError>;
 
-    fn is_playing(&mut self, playback: &mut Self::Playback) -> Result<bool, PlayerError>;
+    fn play_range(
+        &mut self,
+        sound: &mut Self::Sound,
+        start_frame: u64,
+        end_frame: u64,
+    ) -> Result<Self::Playback, PlayerError>;
+
+    fn pause(&mut self, sound: &mut Self::Playback) -> Result<Self::Playback, PlayerError>;
+
+    fn resume(&mut self, sound: &mut Self::Playback) -> Result<Self::Playback, PlayerError>;
+
+    fn get_state(&mut self, playback: &mut Self::Playback) -> Result<PlaybackState, PlayerError>;
+
+    fn is_playing(&mut self, playback: &mut Self::Playback) -> Result<bool, PlayerError> {
+        Ok(matches!(self.get_state(playback)?, PlaybackState::Playing))
+    }
+
+    fn is_paused(&mut self, playback: &mut Self::Playback) -> Result<bool, PlayerError> {
+        Ok(matches!(self.get_state(playback)?, PlaybackState::Paused))
+    }
+
+    fn is_stopped(&mut self, playback: &mut Self::Playback) -> Result<bool, PlayerError> {
+        Ok(matches!(self.get_state(playback)?, PlaybackState::Stopped))
+    }
+
+    fn add_playback_listener(&mut self) -> Result<(), PlayerError>;
+
+    fn remove_playback_listener(&mut self) -> Result<(), PlayerError>;
 
     fn close(&mut self) -> Result<(), PlayerError>;
+}
+
+pub trait PlaybackListener {
+    fn on_progress(&mut self, position_frames: u64);
+}
+
+pub enum PlaybackState {
+    Playing,
+    Paused,
+    Stopped,
+    Invalid,
 }
 
 #[derive(Debug)]
