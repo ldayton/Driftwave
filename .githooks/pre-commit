@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Run cargo fmt
+cargo fmt
+
+# Stage any changes made by formatting
+git add -A
+
+echo "✅ Code formatted and staged"
+exit 0

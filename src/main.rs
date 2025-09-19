@@ -9,21 +9,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     unsafe {
         // Create FMOD system
         let mut system: *mut fmod_sys::FMOD_SYSTEM = ptr::null_mut();
-        let result = fmod_sys::FMOD_System_Create(
-            &mut system,
-            fmod_sys::FMOD_VERSION as u32,
-        );
+        let result = fmod_sys::FMOD_System_Create(&mut system, fmod_sys::FMOD_VERSION as u32);
         if result != fmod_sys::FMOD_RESULT_FMOD_OK {
             panic!("Failed to create FMOD system: {}", result);
         }
 
         // Initialize FMOD system
-        let result = fmod_sys::FMOD_System_Init(
-            system,
-            512,
-            fmod_sys::FMOD_INIT_NORMAL,
-            ptr::null_mut(),
-        );
+        let result = fmod_sys::FMOD_System_Init(system, 512, fmod_sys::FMOD_INIT_NORMAL, ptr::null_mut());
         if result != fmod_sys::FMOD_RESULT_FMOD_OK {
             panic!("Failed to initialize FMOD system: {}", result);
         }
@@ -48,7 +40,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             system,
             sound,
             ptr::null_mut(),
-            0,  // not paused
+            0, // not paused
             &mut channel,
         );
         if result != fmod_sys::FMOD_RESULT_FMOD_OK {
