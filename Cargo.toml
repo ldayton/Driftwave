@@ -6,3 +6,5 @@ default-run = "driftwave"
 
 [dependencies]
 bindgen = "*"
+symphonia = { version = "0.5.4", features = ["all"]}
+wide = "0.7"
