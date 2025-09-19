@@ -33,7 +33,7 @@ impl Player for FmodPlayer {
             }
             let result = fmod_sys::FMOD_System_Init(
                 self.system,
-                512,
+                2,
                 fmod_sys::FMOD_INIT_NORMAL,
                 ptr::null_mut(),
             );
