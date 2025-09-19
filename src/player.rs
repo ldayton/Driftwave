@@ -23,7 +23,6 @@ pub trait Player {
         sound: &mut Self::Sound,
         start_frame: u64,
         end_frame: u64,
-        listener: Option<Self::PlaybackListener>,
     ) -> Result<Self::Playback, PlayerError>;
 
     fn pause(&mut self, sound: &mut Self::Playback) -> Result<Self::Playback, PlayerError>;

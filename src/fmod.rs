@@ -163,14 +163,70 @@ impl Player for FmodPlayer {
 
     fn play_range(
         &mut self,
-        _sound: &mut Self::Sound,
-        _start_frame: u64,
-        _end_frame: u64,
-        _listener: Option<Self::PlaybackListener>,
+        sound: &mut Self::Sound,
+        start_frame: u64,
+        end_frame: u64,
     ) -> Result<Self::Playback, PlayerError> {
-        Err(PlayerError {
-            message: "play_range not implemented".to_string(),
-        })
+        unsafe {
+            let mut channel: *mut fmod_sys::FMOD_CHANNEL = ptr::null_mut();
+            let result = fmod_sys::FMOD_System_PlaySound(
+                self.system,
+                sound.ptr,
+                ptr::null_mut(),
+                1, // paused
+                &mut channel,
+            );
+            if result != fmod_sys::FMOD_RESULT_FMOD_OK {
+                return Err(PlayerError {
+                    message: format!("Failed to play sound: {}", result),
+                });
+            }
+            if start_frame > u32::MAX as u64 {
+                return Err(PlayerError {
+                    message: format!("Start frame {} exceeds u32 max", start_frame),
+                });
+            }
+            let result = fmod_sys::FMOD_Channel_SetPosition(
+                channel,
+                start_frame as u32,
+                fmod_sys::FMOD_TIMEUNIT_PCM,
+            );
+            if result != fmod_sys::FMOD_RESULT_FMOD_OK {
+                return Err(PlayerError {
+                    message: format!("Failed to set start position: {}", result),
+                });
+            }
+            let mut parent_clock: u64 = 0;
+            let result =
+                fmod_sys::FMOD_Channel_GetDSPClock(channel, ptr::null_mut(), &mut parent_clock);
+            if result != fmod_sys::FMOD_RESULT_FMOD_OK {
+                return Err(PlayerError {
+                    message: format!("Failed to get DSP clock: {}", result),
+                });
+            }
+            let duration_frames = end_frame - start_frame;
+            let stop_clock = parent_clock + duration_frames;
+            let result = fmod_sys::FMOD_Channel_SetDelay(
+                channel, 0, // start immediately
+                stop_clock, 1, // stopchannels
+            );
+            if result != fmod_sys::FMOD_RESULT_FMOD_OK {
+                return Err(PlayerError {
+                    message: format!("Failed to set delay: {}", result),
+                });
+            }
+            let result = fmod_sys::FMOD_Channel_SetPaused(channel, 0);
+            if result != fmod_sys::FMOD_RESULT_FMOD_OK {
+                return Err(PlayerError {
+                    message: format!("Failed to unpause channel: {}", result),
+                });
+            }
+            Ok(FmodPlayback {
+                ptr: channel,
+                dsp: ptr::null_mut(),
+                callback_data: ptr::null_mut(),
+            })
+        }
     }
 
     fn pause(&mut self, _playback: &mut Self::Playback) -> Result<Self::Playback, PlayerError> {

@@ -28,9 +28,18 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let mut sound = player.load(Path::new("assets/אני פורים.wav"))?;
     let listener = Box::new(ProgressPrinter);
-    let mut playback = player.play(&mut sound, Some(listener))?;
 
-    while player.is_playing(&mut playback)? {
+    {
+        let mut playback = player.play(&mut sound, Some(listener))?;
+        while player.is_playing(&mut playback)? {
+            thread::sleep(Duration::from_millis(50));
+        }
+    }
+
+    thread::sleep(Duration::from_millis(500));
+
+    let mut range_playback = player.play_range(&mut sound, 30_000, 53_000)?;
+    while player.is_playing(&mut range_playback)? {
         thread::sleep(Duration::from_millis(50));
     }
 
