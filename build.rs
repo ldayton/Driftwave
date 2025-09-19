@@ -38,7 +38,7 @@ fn main() {
             let dll_dst = target_dir.join("fmod.dll");
 
             if dll_src.exists() {
-                fs::copy(&dll_src, &dll_dst).unwrap();
+                fs::copy(dll_src, dll_dst).unwrap();
                 println!("cargo:rerun-if-changed=fmod/windows/fmod.dll");
             }
         }

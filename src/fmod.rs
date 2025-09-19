@@ -24,7 +24,7 @@ impl Player for FmodPlayer {
     fn init(&mut self) -> Result<(), PlayerError> {
         unsafe {
             self.system = ptr::null_mut();
-            let result = fmod_sys::FMOD_System_Create(&mut self.system, fmod_sys::FMOD_VERSION as u32);
+            let result = fmod_sys::FMOD_System_Create(&mut self.system, fmod_sys::FMOD_VERSION);
             if result != fmod_sys::FMOD_RESULT_FMOD_OK {
                 return Err(PlayerError {
                     message: format!("Failed to create FMOD system: {}", result),
@@ -84,7 +84,7 @@ impl Player for FmodPlayer {
                     message: format!("Failed to play sound: {}", result),
                 });
             }
-            return Ok(FmodPlayback { ptr: channel });
+            Ok(FmodPlayback { ptr: channel })
         }
     }
 
