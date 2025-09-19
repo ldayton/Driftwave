@@ -1,0 +1,7 @@
+# Rustfmt configuration
+edition = "2021"
+max_width = 120
+use_small_heuristics = "Default"
+imports_granularity = "Crate"
+format_strings = true
+wrap_comments = true
