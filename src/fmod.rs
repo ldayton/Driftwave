@@ -1,5 +1,5 @@
 use crate::ffi::fmod_sys;
-use crate::player::{PlaybackState, Player, PlayerError};
+use crate::player::{PlaybackListener, PlaybackState, Player, PlayerError};
 
 use std::ffi::CString;
 use std::path::Path;
@@ -20,7 +20,7 @@ impl FmodPlayer {
 impl Player for FmodPlayer {
     type Sound = FmodSound;
     type Playback = FmodPlayback;
-    type PlaybackListener = ();
+    type PlaybackListener = Box<dyn PlaybackListener>;
 
     fn init(&mut self) -> Result<(), PlayerError> {
         unsafe {
@@ -75,7 +75,11 @@ impl Player for FmodPlayer {
         }
     }
 
-    fn play(&mut self, sound: &mut FmodSound) -> Result<FmodPlayback, PlayerError> {
+    fn play(
+        &mut self,
+        sound: &mut FmodSound,
+        _listener: Option<Self::PlaybackListener>,
+    ) -> Result<FmodPlayback, PlayerError> {
         unsafe {
             let mut channel: *mut fmod_sys::FMOD_CHANNEL = ptr::null_mut();
             let result = fmod_sys::FMOD_System_PlaySound(
@@ -99,6 +103,7 @@ impl Player for FmodPlayer {
         _sound: &mut Self::Sound,
         _start_frame: u64,
         _end_frame: u64,
+        _listener: Option<Self::PlaybackListener>,
     ) -> Result<Self::Playback, PlayerError> {
         Err(PlayerError {
             message: "play_range not implemented".to_string(),
@@ -152,18 +157,6 @@ impl Player for FmodPlayer {
                 Ok(PlaybackState::Playing)
             }
         }
-    }
-
-    fn add_playback_listener(&mut self) -> Result<(), PlayerError> {
-        Err(PlayerError {
-            message: "add_playback_listener not implemented".to_string(),
-        })
-    }
-
-    fn remove_playback_listener(&mut self) -> Result<(), PlayerError> {
-        Err(PlayerError {
-            message: "remove_playback_listener not implemented".to_string(),
-        })
     }
 
     fn close(&mut self) -> Result<(), PlayerError> {

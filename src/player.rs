@@ -12,13 +12,18 @@ pub trait Player {
 
     fn load(&mut self, path: &Path) -> Result<Self::Sound, PlayerError>;
 
-    fn play(&mut self, sound: &mut Self::Sound) -> Result<Self::Playback, PlayerError>;
+    fn play(
+        &mut self,
+        sound: &mut Self::Sound,
+        listener: Option<Self::PlaybackListener>,
+    ) -> Result<Self::Playback, PlayerError>;
 
     fn play_range(
         &mut self,
         sound: &mut Self::Sound,
         start_frame: u64,
         end_frame: u64,
+        listener: Option<Self::PlaybackListener>,
     ) -> Result<Self::Playback, PlayerError>;
 
     fn pause(&mut self, sound: &mut Self::Playback) -> Result<Self::Playback, PlayerError>;
@@ -38,10 +43,6 @@ pub trait Player {
     fn is_stopped(&mut self, playback: &mut Self::Playback) -> Result<bool, PlayerError> {
         Ok(matches!(self.get_state(playback)?, PlaybackState::Stopped))
     }
-
-    fn add_playback_listener(&mut self) -> Result<(), PlayerError>;
-
-    fn remove_playback_listener(&mut self) -> Result<(), PlayerError>;
 
     fn close(&mut self) -> Result<(), PlayerError>;
 }
