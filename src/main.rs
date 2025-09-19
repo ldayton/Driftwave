@@ -1,6 +1,4 @@
-mod ffi {
-    pub mod fmod_sys;
-}
+mod ffi;
 use ffi::fmod_sys;
 
 use std::ffi::CString;

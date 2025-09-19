@@ -9,7 +9,7 @@ cargo build
 ## Run
 
 ```bash
-cargo run --bin driftwave
+cargo run
 ```
 
 ## Test
