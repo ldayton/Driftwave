@@ -1,32 +1,7 @@
 {
-  // Debug rust-analyzer crashes
-  "rust-analyzer.server.extraEnv": {
-    "RA_LOG": "info",
-    "RUST_BACKTRACE": "1"
-  },
-
-  // Verbose logging for troubleshooting
-  "rust-analyzer.trace.server": "verbose",
-
-  // Note: removed excludeDirs as it breaks module resolution
-
-  // Use clippy for better code analysis
-  "rust-analyzer.check.command": "clippy",
-
-  // Show inline type hints
-  "rust-analyzer.inlayHints.typeHints.enable": true,
-
-  // Colorful bracket pairs
-  "editor.bracketPairColorization.enabled": true,
-  "editor.guides.bracketPairs": "active",
-
   // Exclude heavy directories from search
   "search.exclude": {
     "**/target": true,
     "src/ffi": true
-  },
-
-  // Better syntax highlighting
-  "rust-analyzer.semanticHighlighting.strings.enable": true,
-  "rust-analyzer.semanticHighlighting.operator.enable": true
+  }
 }
