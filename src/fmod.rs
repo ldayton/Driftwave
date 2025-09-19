@@ -1,3 +1,4 @@
+use crate::dsp;
 use crate::ffi::fmod_sys;
 use crate::player::{PlaybackListener, PlaybackState, Player, PlayerError};
 
@@ -34,7 +35,7 @@ impl Player for FmodPlayer {
             let result = fmod_sys::FMOD_System_Init(
                 self.system,
                 2,
-                fmod_sys::FMOD_INIT_NORMAL,
+                fmod_sys::FMOD_INIT_NORMAL | fmod_sys::FMOD_INIT_THREAD_UNSAFE,
                 ptr::null_mut(),
             );
             if result != fmod_sys::FMOD_RESULT_FMOD_OK {
@@ -78,7 +79,7 @@ impl Player for FmodPlayer {
     fn play(
         &mut self,
         sound: &mut FmodSound,
-        _listener: Option<Self::PlaybackListener>,
+        listener: Option<Self::PlaybackListener>,
     ) -> Result<FmodPlayback, PlayerError> {
         unsafe {
             let mut channel: *mut fmod_sys::FMOD_CHANNEL = ptr::null_mut();
@@ -94,7 +95,69 @@ impl Player for FmodPlayer {
                     message: format!("Failed to play sound: {}", result),
                 });
             }
-            Ok(FmodPlayback { ptr: channel })
+
+            // If we have a listener, create and attach a DSP for progress callbacks
+            let mut dsp: *mut fmod_sys::FMOD_DSP = ptr::null_mut();
+            let mut callback_data: *mut dsp::DspCallbackData = ptr::null_mut();
+
+            if let Some(listener_box) = listener {
+                // Create DSP description
+                let mut dspdesc: fmod_sys::FMOD_DSP_DESCRIPTION = std::mem::zeroed();
+                dspdesc.pluginsdkversion = fmod_sys::FMOD_PLUGIN_SDK_VERSION;
+                let name = b"Progress Tracker\0";
+                ptr::copy_nonoverlapping(
+                    name.as_ptr(),
+                    dspdesc.name.as_mut_ptr() as *mut u8,
+                    name.len(),
+                );
+                dspdesc.version = 0x00010000;
+                dspdesc.numinputbuffers = 1;
+                dspdesc.numoutputbuffers = 1;
+                dspdesc.read = Some(dsp::progress_dsp_callback);
+
+                // Create the DSP
+                let result = fmod_sys::FMOD_System_CreateDSP(self.system, &dspdesc, &mut dsp);
+                if result != fmod_sys::FMOD_RESULT_FMOD_OK {
+                    return Err(PlayerError {
+                        message: format!("Failed to create DSP: {}", result),
+                    });
+                }
+
+                // Create callback data
+                callback_data = Box::into_raw(Box::new(dsp::DspCallbackData {
+                    listener: Some(listener_box),
+                    channel,
+                }));
+
+                // Set user data on the DSP
+                let result =
+                    fmod_sys::FMOD_DSP_SetUserData(dsp, callback_data as *mut std::ffi::c_void);
+                if result != fmod_sys::FMOD_RESULT_FMOD_OK {
+                    // Clean up
+                    drop(Box::from_raw(callback_data));
+                    fmod_sys::FMOD_DSP_Release(dsp);
+                    return Err(PlayerError {
+                        message: format!("Failed to set DSP user data: {}", result),
+                    });
+                }
+
+                // Add DSP to channel
+                let result = fmod_sys::FMOD_Channel_AddDSP(channel, 0, dsp);
+                if result != fmod_sys::FMOD_RESULT_FMOD_OK {
+                    // Clean up
+                    drop(Box::from_raw(callback_data));
+                    fmod_sys::FMOD_DSP_Release(dsp);
+                    return Err(PlayerError {
+                        message: format!("Failed to add DSP to channel: {}", result),
+                    });
+                }
+            }
+
+            Ok(FmodPlayback {
+                ptr: channel,
+                dsp,
+                callback_data,
+            })
         }
     }
 
@@ -178,4 +241,19 @@ pub struct FmodSound {
 
 pub struct FmodPlayback {
     ptr: *mut fmod_sys::FMOD_CHANNEL,
+    dsp: *mut fmod_sys::FMOD_DSP,
+    callback_data: *mut dsp::DspCallbackData,
+}
+
+impl Drop for FmodPlayback {
+    fn drop(&mut self) {
+        unsafe {
+            if !self.dsp.is_null() {
+                fmod_sys::FMOD_DSP_Release(self.dsp);
+            }
+            if !self.callback_data.is_null() {
+                drop(Box::from_raw(self.callback_data));
+            }
+        }
+    }
 }
