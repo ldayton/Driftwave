@@ -9,7 +9,7 @@ cargo build
 ## Run
 
 ```bash
-cargo run
+cargo run --bin driftwave
 ```
 
 ## Test
@@ -23,4 +23,9 @@ cargo test
 Enable git hooks for automatic code formatting:
 ```bash
 git config core.hooksPath .githooks
+```
+
+Regenerate FMOD FFI bindings:
+```bash
+cargo run --bin generate_bindings
 ```

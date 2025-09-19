@@ -2,4 +2,4 @@
 edition = "2021"
 max_width = 120
 use_small_heuristics = "Default"
-ignore = ["src/fmod_sys.rs"]
+ignore = ["src/ffi/fmod_sys.rs"]

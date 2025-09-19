@@ -15,9 +15,9 @@ fn main() {
         .generate()
         .expect("Unable to generate bindings");
 
-    let out_path = PathBuf::from("src/fmod_sys.rs");
+    let out_path = PathBuf::from("src/ffi/fmod_sys.rs");
     bindings.write_to_file(out_path).expect("Couldn't write bindings!");
 
-    println!("Generated bindings to src/fmod_sys.rs");
+    println!("Generated bindings to src/ffi/fmod_sys.rs");
     println!("Run with: cargo run --bin generate_bindings");
 }

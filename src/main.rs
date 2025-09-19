@@ -1,4 +1,7 @@
-mod fmod_sys;
+mod ffi {
+    pub mod fmod_sys;
+}
+use ffi::fmod_sys;
 
 use std::ffi::CString;
 use std::ptr;
