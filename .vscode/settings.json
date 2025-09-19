@@ -8,8 +8,7 @@
   // Verbose logging for troubleshooting
   "rust-analyzer.trace.server": "verbose",
 
-  // Exclude auto-generated FMOD bindings from analysis
-  "rust-analyzer.files.excludeDirs": ["src/ffi"],
+  // Note: removed excludeDirs as it breaks module resolution
 
   // Use clippy for better code analysis
   "rust-analyzer.check.command": "clippy",
