@@ -2,19 +2,25 @@
 
 A waveform visualization engine built with research-grade accuracy and developer-grade portability
 
-## Why Driftwave?  
-Most waveform visualizers are built for consumers, not researchers. Driftwave is different: a high-performance waveform engine that combines lab-grade accuracy with modern GPU-powered rendering. It’s designed for engineers, scientists, and developers who need sample-precise visualization as a foundation for serious analysis and annotation.  
+## Why Driftwave?
 
-## Project goals  
-- **Exact Precision**: Every sample mapped to the right pixel, enabling reliable measurement and annotation.  
-- **High Speed**: GPU acceleration and SIMD keep panning, zooming, and scrubbing fluid—even with hours of high-resolution audio.  
-- **Cross-Platform by Design**:  
-  - Native runtimes on macOS, Windows, and Linux powered by [FMOD](https://www.fmod.com/)  
-  - WebAssembly builds for browsers, when Web Audio’s latency is acceptable
-- **Built for Analysis**: Not just pretty graphics—an engine ready for phonetics research, bioacoustics, and industrial signal analysis with sub-millisecond precision.  
+Most waveform tools compromise on either precision or portability. Driftwave doesn’t. It delivers research-grade accuracy and GPU-powered performance in one engine—built for engineers, scientists, and developers who need sample-perfect visualization as the backbone of serious analysis and annotation.
 
-## Technology  
-- **Rust core** for safety and speed  
-- **WebGPU renderer** for portable GPU acceleration  
-- **SIMD-optimized DSP** for efficient audio crunching  
-- **Minimal JavaScript** so downstream apps choose their own UI stack  
+## Project goals
+
+- **🎯 Exact Precision**: Every sample mapped to the right pixel, enabling reliable measurement and annotation.
+- **🚀 High Speed**: GPU acceleration and SIMD keep panning, zooming, and scrubbing fluid—even with hours of high-resolution audio.
+- **Cross-Platform by Design**:
+  - 🖥️ Native runtimes on macOS, Windows, and Linux powered by [FMOD](https://www.fmod.com/) and [Tauri](https://v2.tauri.app/), easily adapted to Electron
+  - 🌐 WebAssembly bundles for browsers, when Web Audio’s limitations are acceptable
+- **🔍 Built for Analysis**: Not just pretty graphics—an engine ready for phonetics research, bioacoustics, and industrial signal analysis with sample-level precision.
+
+## Technology
+
+- **Rust core** for safety and speed
+- **WebGPU renderer** for portable GPU acceleration
+- **SIMD-optimized peak detection** for efficient audio crunching
+- **Configurable DSP** so you can focus on the signal, not the noise
+- **Phase-locked loop** motion stabilization (optional)
+- **Advanced latency estimation** in desktop versions
+- **Javascript bindings** compatible with any UI framework
