@@ -1,6 +1,6 @@
 # Driftwave 〰️
 
-A waveform engine built with research-grade accuracy and developer-grade portability
+A waveform visualization engine built with research-grade accuracy and developer-grade portability
 
 ## Why Driftwave?  
 Most waveform visualizers are built for consumers, not researchers. Driftwave is different: a high-performance waveform engine that combines lab-grade accuracy with modern GPU-powered rendering. It’s designed for engineers, scientists, and developers who need sample-precise visualization as a foundation for serious analysis and annotation.  
