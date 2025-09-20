@@ -1,4 +1,4 @@
-# 〰️ Driftwave 〰️
+# Driftwave 〰️
 
 A waveform engine built with research-grade accuracy and developer-grade portability
 
