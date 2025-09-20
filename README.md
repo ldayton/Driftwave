@@ -16,17 +16,18 @@ Audio waveform rendering
 - Rust
 - Node
 
+### Windows extra setup
+
+Install [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) or Visual Studio 2022.
+During installation, select "Desktop development with C++" workload.
+
 ### Mac extra setup
 
-Install Xcode.
+Install Xcode from the App Store.
 
 ### Linux extra setup
 
 See `.github/workflows/build-linux` for Ubuntu 24.04 instructions.
-
-### Windows extra setup
-
-Install LLVM from https://releases.llvm.org/.
 
 ## Run
 
