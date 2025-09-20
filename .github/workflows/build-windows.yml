@@ -7,11 +7,16 @@ on:
 
 jobs:
   build-windows:
-    runs-on: windows-2022
+    runs-on: windows-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Enable VBSCRIPT for MSI packaging
+        run: |
+          Enable-WindowsOptionalFeature -Online -FeatureName "VBSCRIPT" -All -NoRestart
+        shell: powershell
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -51,10 +56,20 @@ jobs:
           path: target/release/bundle/nsis/*.exe
           retention-days: 7
 
+      - name: Upload .msi installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: Driftwave-windows-msi
+          path: target/release/bundle/msi/*.msi
+          retention-days: 7
+
       - name: List build artifacts
         run: |
           echo "=== Build artifacts ==="
+          echo "NSIS artifacts:"
           dir target\release\bundle\nsis\
+          echo "MSI artifacts:"
+          dir target\release\bundle\msi\
 
       - name: Upload build log
         uses: actions/upload-artifact@v4
