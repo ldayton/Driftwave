@@ -1,4 +1,4 @@
-name: Build Mac App
+name: Build Windows App
 
 on:
   push:
@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-macos:
-    runs-on: macos-latest
+  build-windows:
+    runs-on: windows-latest
 
     steps:
       - name: Checkout repository
@@ -22,12 +22,7 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: aarch64-apple-darwin,x86_64-apple-darwin
-
-      - name: Add Rust targets
-        run: |
-          rustup target add aarch64-apple-darwin
-          rustup target add x86_64-apple-darwin
+          targets: x86_64-pc-windows-msvc
 
       - name: Rust cache
         uses: swatinem/rust-cache@v2
@@ -37,28 +32,28 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci
 
-      - name: Build Tauri app (Universal Binary)
-        run: npm run tauri build -- --target universal-apple-darwin
+      - name: Build Tauri app
+        run: npm run tauri build
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
 
-      - name: Upload .app bundle
+      - name: Upload .exe installer
         uses: actions/upload-artifact@v4
         with:
-          name: Driftwave-mac-app
-          path: src-tauri/target/universal-apple-darwin/release/bundle/macos/*.app
+          name: Driftwave-windows-exe
+          path: src-tauri/target/release/bundle/nsis/*.exe
           retention-days: 7
 
-      - name: Upload .dmg installer
+      - name: Upload .msi installer
         uses: actions/upload-artifact@v4
         with:
-          name: Driftwave-mac-dmg
-          path: src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg
+          name: Driftwave-windows-msi
+          path: src-tauri/target/release/bundle/msi/*.msi
           retention-days: 7
 
       - name: List build artifacts
         run: |
           echo "=== Build artifacts ==="
-          ls -la src-tauri/target/universal-apple-darwin/release/bundle/macos/
-          ls -la src-tauri/target/universal-apple-darwin/release/bundle/dmg/
+          dir src-tauri\target\release\bundle\nsis\
+          dir src-tauri\target\release\bundle\msi\

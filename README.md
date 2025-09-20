@@ -15,6 +15,19 @@ Install:
 - Rust
 - Node
 
+### Linux-only extra setup
+
+Install dependencies with Homebrew for Linux:
+```bash
+brew install webkitgtk libsoup@2
+```
+
+Set environment variables:
+```bash
+export PKG_CONFIG_PATH="/home/linuxbrew/.linuxbrew/Cellar/libsoup@2/2.74.3/lib/pkgconfig:/home/linuxbrew/.linuxbrew/lib/pkgconfig:/home/linuxbrew/.linuxbrew/share/pkgconfig:$PKG_CONFIG_PATH"
+export LD_LIBRARY_PATH="/home/linuxbrew/.linuxbrew/lib:$LD_LIBRARY_PATH"
+```
+
 ## Run
 
 ```bash
@@ -41,34 +54,3 @@ Regenerate FMOD FFI bindings:
 ```bash
 cd tools && cargo run --bin generate_bindings
 ```
-
-## Package
-
-### Mac (app/dmg)
-
-```bash
-npm run tauri build
-```
-
-### Linux
-
-Install build dependencies with Homebrew for Linux:
-
-```bash
-brew install webkitgtk libsoup@2
-```
-
-Tell Tauri where to find things:
-
-```bash
-export PKG_CONFIG_PATH="/home/linuxbrew/.linuxbrew/Cellar/libsoup@2/2.74.3/lib/pkgconfig:/home/linuxbrew/.linuxbrew/lib/pkgconfig:/home/linuxbrew/.linuxbrew/share/pkgconfig:$PKG_CONFIG_PATH"
-ln -sf /home/linuxbrew/.linuxbrew/lib/pkgconfig/javascriptcoregtk-4.1.pc /home/linuxbrew/.linuxbrew/lib/pkgconfig/javascriptcoregtk-4.0.pc
-ln -sf /home/linuxbrew/.linuxbrew/lib/pkgconfig/webkit2gtk-4.1.pc /home/linuxbrew/.linuxbrew/lib/pkgconfig/webkit2gtk-4.0.pc
-```
-
-Now build like normal:
-
-```bash
-npm run tauri build
-```
-
