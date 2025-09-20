@@ -10,6 +10,12 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - name: Symlink target to C:\
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Force -Path C:\driftwave_target
+          New-Item -Path target -ItemType Junction -Value C:\driftwave_target
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
