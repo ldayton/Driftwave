@@ -1,22 +1,34 @@
 # Driftwave
 
-## Build
+Audio waveform rendering
 
-```bash
-cargo build
-```
+## Project goals
+
+- Sample-accurate and pixel-accurate, appropriate for scientific use
+- Ultra-smooth performance, with GPU acceleration and SIMD execution
+- Cross-platform desktop support via Tauri & FMOD: macOS, Windows, Linux
+- Web support via WASM & Web Audio
+
+## Setup
+
+Install:
+- Rust
+- Node
 
 ## Run
 
 ```bash
-cargo run
+npm install
+npm run dev
 ```
 
-## Test
+## Project structure
 
-```bash
-cargo test
-```
+- `src-tauri/` - Rust backend
+  - `src/core/` - Audio processing logic
+  - `src/ffi/` - FMOD bindings
+- `src/` - Web frontend
+- `tools/` - Build utilities
 
 ## Develop
 
@@ -27,5 +39,5 @@ git config core.hooksPath .githooks
 
 Regenerate FMOD FFI bindings:
 ```bash
-cargo run --bin generate_bindings
+cd tools && cargo run --bin generate_bindings
 ```

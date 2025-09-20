@@ -1,0 +1,11 @@
+[package]
+name = "driftwave-tools"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "generate_bindings"
+path = "generate_bindings.rs"
+
+[dependencies]
+bindgen = "*"

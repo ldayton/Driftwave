@@ -3,8 +3,8 @@ use symphonia::core::audio::AudioBuffer;
 use wide::f32x8;
 
 pub struct MipmapConfig {
-    pub base_resolution: u32,  // e.g., 512 samples per pixel
-    pub num_levels: u32,       // e.g., 8 levels
+    pub base_resolution: u32, // e.g., 512 samples per pixel
+    pub num_levels: u32,      // e.g., 8 levels
 }
 
 pub struct PeakData {
@@ -25,7 +25,10 @@ pub struct AudioMipmap {
 }
 
 impl AudioMipmap {
-    pub fn from_file(path: &Path, config: &MipmapConfig) -> Result<Self, Box<dyn std::error::Error>> {
+    pub fn from_file(
+        path: &Path,
+        config: &MipmapConfig,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
         todo!()
     }
 

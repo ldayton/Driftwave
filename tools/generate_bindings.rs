@@ -3,9 +3,9 @@ use std::path::PathBuf;
 
 fn main() {
     let bindings = bindgen::Builder::default()
-        .header("fmod/headers/fmod.h")
-        .header("fmod/headers/fmod_common.h")
-        .header("fmod/headers/fmod_errors.h")
+        .header("../fmod/headers/fmod.h")
+        .header("../fmod/headers/fmod_common.h")
+        .header("../fmod/headers/fmod_errors.h")
         // Only generate bindings for FMOD functions/types
         .allowlist_function("FMOD_.*")
         .allowlist_type("FMOD_.*")
@@ -16,7 +16,7 @@ fn main() {
         .generate()
         .expect("Unable to generate bindings");
 
-    let out_path = PathBuf::from("src/ffi/fmod_sys.rs");
+    let out_path = PathBuf::from("../src-tauri/src/ffi/fmod_sys.rs");
     bindings
         .write_to_file(&out_path)
         .expect("Couldn't write bindings!");
@@ -37,6 +37,6 @@ fn main() {
 
     fs::write(out_path, new_content).expect("Failed to write modified file");
 
-    println!("Generated bindings to src/ffi/fmod_sys.rs");
-    println!("Run with: cargo run --bin generate_bindings");
+    println!("Generated bindings to ../src-tauri/src/ffi/fmod_sys.rs");
+    println!("Run from tools/ directory with: cargo run --bin generate_bindings");
 }

@@ -1,4 +1,10 @@
 .DS_Store
 /target
+/src-tauri/target
+/tools/target
 **/*.rs.bk
 *.pdb
+/dist
+node_modules
+*.log
+

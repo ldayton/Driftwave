@@ -1,6 +1,6 @@
-use crate::dsp;
+use super::dsp;
+use super::player::{PlaybackListener, PlaybackState, Player, PlayerError};
 use crate::ffi::fmod_sys;
-use crate::player::{PlaybackListener, PlaybackState, Player, PlayerError};
 
 use std::ffi::CString;
 use std::path::Path;

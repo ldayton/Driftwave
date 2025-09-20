@@ -1,5 +1,5 @@
+use super::player::PlaybackListener;
 use crate::ffi::fmod_sys;
-use crate::player::PlaybackListener;
 
 use std::ffi::c_void;
 use std::ptr;
