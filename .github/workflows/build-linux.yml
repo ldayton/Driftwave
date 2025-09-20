@@ -33,10 +33,11 @@ jobs:
           libgtk-3-dev \
           libayatana-appindicator3-dev \
           librsvg2-dev \
-          libfuse2 \
+          libfuse2t64 \
           libnss3-dev \
           desktop-file-utils \
-          zsync
+          zsync \
+          patchelf
 
     - name: Cache Rust dependencies
       uses: actions/cache@v4
