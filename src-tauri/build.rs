@@ -36,7 +36,7 @@ fn main() {
             let fmod_dir = project_dir.join("fmod").join("windows");
 
             println!("cargo:rustc-link-search=native={}", fmod_dir.display());
-            println!("cargo:rustc-link-lib=dylib=fmod");
+            println!("cargo:rustc-link-lib=dylib=fmod_vc");
 
             // Copy DLL to output directory for Windows
             // OUT_DIR is something like: target/debug/build/driftwave-xxx/out
