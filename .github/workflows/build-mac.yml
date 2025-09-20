@@ -68,38 +68,38 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Driftwave-mac-app-x86_64
-          path: src-tauri/target/x86_64-apple-darwin/release/bundle/macos/*.app
+          path: target/x86_64-apple-darwin/release/bundle/macos/*.app
           retention-days: 7
 
       - name: Upload .dmg installer (x86_64)
         uses: actions/upload-artifact@v4
         with:
           name: Driftwave-mac-dmg-x86_64
-          path: src-tauri/target/x86_64-apple-darwin/release/bundle/dmg/*.dmg
+          path: target/x86_64-apple-darwin/release/bundle/dmg/*.dmg
           retention-days: 7
 
       - name: Upload .app bundle (aarch64)
         uses: actions/upload-artifact@v4
         with:
           name: Driftwave-mac-app-aarch64
-          path: src-tauri/target/aarch64-apple-darwin/release/bundle/macos/*.app
+          path: target/aarch64-apple-darwin/release/bundle/macos/*.app
           retention-days: 7
 
       - name: Upload .dmg installer (aarch64)
         uses: actions/upload-artifact@v4
         with:
           name: Driftwave-mac-dmg-aarch64
-          path: src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg
+          path: target/aarch64-apple-darwin/release/bundle/dmg/*.dmg
           retention-days: 7
 
       - name: List build artifacts
         run: |
           echo "=== Build artifacts (x86_64) ==="
-          ls -la src-tauri/target/x86_64-apple-darwin/release/bundle/macos/ || true
-          ls -la src-tauri/target/x86_64-apple-darwin/release/bundle/dmg/ || true
+          ls -la target/x86_64-apple-darwin/release/bundle/macos/ || true
+          ls -la target/x86_64-apple-darwin/release/bundle/dmg/ || true
           echo "=== Build artifacts (aarch64) ==="
-          ls -la src-tauri/target/aarch64-apple-darwin/release/bundle/macos/ || true
-          ls -la src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/ || true
+          ls -la target/aarch64-apple-darwin/release/bundle/macos/ || true
+          ls -la target/aarch64-apple-darwin/release/bundle/dmg/ || true
 
       - name: Upload build logs
         uses: actions/upload-artifact@v4

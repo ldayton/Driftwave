@@ -34,7 +34,9 @@ jobs:
           libayatana-appindicator3-dev \
           librsvg2-dev \
           libfuse2 \
-          libnss3-dev
+          libnss3-dev \
+          desktop-file-utils \
+          zsync
 
     - name: Cache Rust dependencies
       uses: actions/cache@v4
@@ -53,12 +55,15 @@ jobs:
     - name: Build Tauri app
       run: |
         set -x
+        # Make AppImage tools executable
+        chmod +x ~/.cache/tauri/linuxdeploy-*.AppImage || true
         RUST_LOG=debug npm run tauri build -- -- --bin driftwave --verbose 2>&1 | tee build.log
         echo "Exit code: $?"
       env:
         RUST_LOG: debug
         RUST_BACKTRACE: full
         NO_STRIP: true
+        APPIMAGE_EXTRACT_AND_RUN: 1
 
     - name: Upload deb artifact
       uses: actions/upload-artifact@v4
