@@ -11,15 +11,24 @@ Audio waveform rendering
 
 ## Setup
 
-Install:
+### All platforms
+
 - Rust
 - Node
 
-### Linux-only extra setup
+### Mac extra setup
+
+Install Xcode Command Line Tools with `xcode-select --install`
+
+### Windows extra setup
+
+Install LLVM from https://releases.llvm.org/
+
+### Linux extra setup
 
 Install dependencies with Homebrew for Linux:
 ```bash
-brew install webkitgtk libsoup@2
+brew install llvm webkitgtk libsoup@2
 ```
 
 Set environment variables:
