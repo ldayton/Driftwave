@@ -1,4 +1,4 @@
-# Driftwave 〰️
+# Driftwave [![Windows Build](https://github.com/ldayton/Driftwave/actions/workflows/build-windows.yml/badge.svg)](https://github.com/ldayton/Driftwave/actions/workflows/build-windows.yml) [![Mac Build](https://github.com/ldayton/Driftwave/actions/workflows/build-mac.yml/badge.svg)](https://github.com/ldayton/Driftwave/actions/workflows/build-mac.yml) [![Linux Build](https://github.com/ldayton/Driftwave/actions/workflows/build-linux.yml/badge.svg)](https://github.com/ldayton/Driftwave/actions/workflows/build-linux.yml) 
 
 A waveform visualization engine built with research-grade accuracy and developer-grade portability
 
