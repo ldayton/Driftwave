@@ -16,3 +16,5 @@ Linux libfmod.so:     c4495645adda386f6c4024e889aa9ed4e21c0c99636abc5be9e1988e4a
 Linux libfmodL.so:    985aa35983f68223ec9f92fd587244e4d23ceace82f043f31f996d7e114f3cfb
 Windows fmod.dll:     eb52264b6a8d565ecf9b7c3cd9d5bb5fce26e449a4bee951298f356cae475eed
 Windows fmodL.dll:    11b1db22478c3913a53c231f0e6f8c98d9e020ccd30c8be0be83a0c50d1c617c
+Windows fmod_vc.lib:  d9cf23e6790e5a467766eb3d7b65e8dbf100744ecd044c1748df371c94331140
+Windows fmodL_vc.lib: 8dc53159725903e60110cc3265fbd3b5cb863f3a389cf5b1836882b4156404f6
