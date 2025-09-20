@@ -13,11 +13,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Enable VBSCRIPT for MSI packaging
-        run: |
-          Enable-WindowsOptionalFeature -Online -FeatureName "VBSCRIPT" -All -NoRestart
-        shell: powershell
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
