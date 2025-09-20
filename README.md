@@ -1,57 +1,20 @@
-# Driftwave
+# 〰️ Driftwave 〰️
 
-Audio waveform rendering
+A waveform engine built with research-grade accuracy and developer-grade portability
 
-## Project goals
+## Why Driftwave?  
+Most waveform visualizers are built for consumers, not researchers. Driftwave is different: a high-performance waveform engine that combines lab-grade accuracy with modern GPU-powered rendering. It’s designed for engineers, scientists, and developers who need sample-precise visualization as a foundation for serious analysis and annotation.  
 
-- Sample-accurate and pixel-accurate, appropriate for scientific use
-- Ultra-smooth performance, with GPU acceleration and SIMD execution
-- Cross-platform desktop support via Tauri & FMOD: macOS, Windows, Linux
-- Web support via WASM & Web Audio
+## Project goals  
+- **Exact Precision**: Every sample mapped to the right pixel, enabling reliable measurement and annotation.  
+- **High Speed**: GPU acceleration and SIMD keep panning, zooming, and scrubbing fluid—even with hours of high-resolution audio.  
+- **Cross-Platform by Design**:  
+  - Native runtimes on macOS, Windows, and Linux powered by [FMOD](https://www.fmod.com/)  
+  - WebAssembly builds for browsers, when Web Audio’s latency is acceptable
+- **Built for Analysis**: Not just pretty graphics—an engine ready for phonetics research, bioacoustics, and industrial signal analysis with sub-millisecond precision.  
 
-## Setup
-
-### All platforms
-
-- Rust
-- Node
-
-### Windows extra setup
-
-Install [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) or Visual Studio 2022.
-During installation, select "Desktop development with C++" workload.
-
-### Mac extra setup
-
-Install Xcode from the App Store.
-
-### Linux extra setup
-
-See `.github/workflows/build-linux` for Ubuntu 24.04 instructions.
-
-## Run
-
-```bash
-npm install
-npm run dev
-```
-
-## Project structure
-
-- `src-tauri/` - Rust backend
-  - `src/core/` - Audio processing logic
-  - `src/ffi/` - FMOD bindings
-- `src/` - Web frontend
-- `tools/` - Build utilities
-
-## Develop
-
-Enable git hooks for automatic code formatting:
-```bash
-git config core.hooksPath .githooks
-```
-
-Regenerate FMOD FFI bindings:
-```bash
-cd tools && cargo run --bin generate_bindings
-```
+## Technology  
+- **Rust core** for safety and speed  
+- **WebGPU renderer** for portable GPU acceleration  
+- **SIMD-optimized DSP** for efficient audio crunching  
+- **Minimal JavaScript** so downstream apps choose their own UI stack  
