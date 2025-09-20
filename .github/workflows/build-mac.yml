@@ -42,10 +42,10 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci
 
-      - name: Build Tauri app (Universal Binary)
+      - name: Build Tauri app for x86_64
         run: |
           set -x
-          RUST_LOG=debug npm run tauri build -- --target universal-apple-darwin -- --bin driftwave --verbose 2>&1 | tee build.log
+          RUST_LOG=debug npm run tauri build -- --target x86_64-apple-darwin --verbose 2>&1 | tee build-x86_64.log
           echo "Exit code: $?"
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
@@ -53,28 +53,59 @@ jobs:
           RUST_LOG: debug
           RUST_BACKTRACE: full
 
-      - name: Upload .app bundle
+      - name: Build Tauri app for aarch64
+        run: |
+          set -x
+          RUST_LOG=debug npm run tauri build -- --target aarch64-apple-darwin --verbose 2>&1 | tee build-aarch64.log
+          echo "Exit code: $?"
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          RUST_LOG: debug
+          RUST_BACKTRACE: full
+
+      - name: Upload .app bundle (x86_64)
         uses: actions/upload-artifact@v4
         with:
-          name: Driftwave-mac-app
-          path: src-tauri/target/universal-apple-darwin/release/bundle/macos/*.app
+          name: Driftwave-mac-app-x86_64
+          path: src-tauri/target/x86_64-apple-darwin/release/bundle/macos/*.app
           retention-days: 7
 
-      - name: Upload .dmg installer
+      - name: Upload .dmg installer (x86_64)
         uses: actions/upload-artifact@v4
         with:
-          name: Driftwave-mac-dmg
-          path: src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg
+          name: Driftwave-mac-dmg-x86_64
+          path: src-tauri/target/x86_64-apple-darwin/release/bundle/dmg/*.dmg
+          retention-days: 7
+
+      - name: Upload .app bundle (aarch64)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Driftwave-mac-app-aarch64
+          path: src-tauri/target/aarch64-apple-darwin/release/bundle/macos/*.app
+          retention-days: 7
+
+      - name: Upload .dmg installer (aarch64)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Driftwave-mac-dmg-aarch64
+          path: src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg
           retention-days: 7
 
       - name: List build artifacts
         run: |
-          echo "=== Build artifacts ==="
-          ls -la src-tauri/target/universal-apple-darwin/release/bundle/macos/
-          ls -la src-tauri/target/universal-apple-darwin/release/bundle/dmg/
+          echo "=== Build artifacts (x86_64) ==="
+          ls -la src-tauri/target/x86_64-apple-darwin/release/bundle/macos/ || true
+          ls -la src-tauri/target/x86_64-apple-darwin/release/bundle/dmg/ || true
+          echo "=== Build artifacts (aarch64) ==="
+          ls -la src-tauri/target/aarch64-apple-darwin/release/bundle/macos/ || true
+          ls -la src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/ || true
 
-      - name: Upload build log
+      - name: Upload build logs
         uses: actions/upload-artifact@v4
         with:
-          name: mac-build-log
-          path: build.log
+          name: mac-build-logs
+          path: |
+            build-x86_64.log
+            build-aarch64.log
+        if: always()
