@@ -18,24 +18,15 @@ Audio waveform rendering
 
 ### Mac extra setup
 
-Install Xcode Command Line Tools with `xcode-select --install`
-
-### Windows extra setup
-
-Install LLVM from https://releases.llvm.org/
+Install Xcode.
 
 ### Linux extra setup
 
-Install dependencies with Homebrew for Linux:
-```bash
-brew install llvm webkitgtk libsoup@2
-```
+See `.github/workflows/build-linux` for Ubuntu 24.04 instructions.
 
-Set environment variables:
-```bash
-export PKG_CONFIG_PATH="/home/linuxbrew/.linuxbrew/Cellar/libsoup@2/2.74.3/lib/pkgconfig:/home/linuxbrew/.linuxbrew/lib/pkgconfig:/home/linuxbrew/.linuxbrew/share/pkgconfig:$PKG_CONFIG_PATH"
-export LD_LIBRARY_PATH="/home/linuxbrew/.linuxbrew/lib:$LD_LIBRARY_PATH"
-```
+### Windows extra setup
+
+Install LLVM from https://releases.llvm.org/.
 
 ## Run
 

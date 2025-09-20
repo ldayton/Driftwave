@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
     - uses: actions/checkout@v4
@@ -24,7 +24,6 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y \
-          libwebkit2gtk-4.0-dev \
           libwebkit2gtk-4.1-dev \
           build-essential \
           curl \
@@ -33,10 +32,7 @@ jobs:
           libssl-dev \
           libgtk-3-dev \
           libayatana-appindicator3-dev \
-          librsvg2-dev \
-          libjavascriptcoregtk-4.0-dev \
-          libjavascriptcoregtk-4.1-dev \
-          libsoup2.4-dev
+          librsvg2-dev
 
     - name: Cache Rust dependencies
       uses: actions/cache@v4

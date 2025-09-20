@@ -2,6 +2,7 @@ use std::env;
 use std::fs::OpenOptions;
 use std::io::Write;
 use std::process::Command;
+use tauri::{path::BaseDirectory, Manager};
 
 #[tauri::command]
 pub fn log_to_file(message: String) -> Result<(), String> {
@@ -30,9 +31,9 @@ pub fn play_audio(app_handle: tauri::AppHandle) -> Result<String, String> {
 
     // Get the resource path for the bundled audio file
     let resource_path = app_handle
-        .path_resolver()
-        .resolve_resource("assets/אני פורים.wav")
-        .ok_or_else(|| "Failed to resolve audio resource path".to_string())?;
+        .path()
+        .resolve("assets/אני פורים.wav", BaseDirectory::Resource)
+        .map_err(|e| e.to_string())?;
 
     let audio_path = resource_path
         .to_str()

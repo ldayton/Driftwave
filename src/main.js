@@ -1,5 +1,5 @@
-// Import Tauri API
-const { invoke } = window.__TAURI__ ? window.__TAURI__.tauri : { invoke: () => console.log('Running without Tauri') };
+// Import Tauri API (v2)
+const { invoke } = window.__TAURI_INTERNALS__ || window.__TAURI__ || { invoke: () => console.log('Running without Tauri') };
 
 // Simple logging function that logs to both console and file
 async function log(...args) {
@@ -24,6 +24,7 @@ async function logError(...args) {
 
 log('Loading main.js...');
 log('window.__TAURI__ exists?', !!window.__TAURI__);
+log('window.__TAURI_INTERNALS__ exists?', !!window.__TAURI_INTERNALS__);
 
 // Canvas setup
 const canvas = document.getElementById('main-canvas');
