@@ -1,9 +1,7 @@
-name: Build Linux
+name: Build Linux App
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
     branches: [ main ]
   workflow_dispatch:
 
@@ -41,7 +39,7 @@ jobs:
           libsoup2.4-dev
 
     - name: Cache Rust dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           ~/.cargo/bin/
@@ -58,19 +56,19 @@ jobs:
       run: npm run tauri build
 
     - name: Upload deb artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: driftwave-linux-deb
         path: target/release/bundle/deb/*.deb
 
     - name: Upload rpm artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: driftwave-linux-rpm
         path: target/release/bundle/rpm/*.rpm
 
     - name: Upload AppImage artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: driftwave-linux-appimage
         path: target/release/bundle/appimage/*.AppImage
