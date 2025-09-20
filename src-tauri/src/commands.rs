@@ -24,12 +24,21 @@ pub fn log_to_file(message: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub fn play_audio() -> Result<String, String> {
+pub fn play_audio(app_handle: tauri::AppHandle) -> Result<String, String> {
     // Log the call
     let _ = log_to_file(format!("[BACKEND] play_audio command called"));
 
-    // Use macOS's built-in afplay command as a temporary solution
-    let audio_path = "../assets/אני פורים.wav";
+    // Get the resource path for the bundled audio file
+    let resource_path = app_handle
+        .path_resolver()
+        .resolve_resource("assets/אני פורים.wav")
+        .ok_or_else(|| "Failed to resolve audio resource path".to_string())?;
+
+    let audio_path = resource_path
+        .to_str()
+        .ok_or_else(|| "Failed to convert path to string".to_string())?;
+
+    let _ = log_to_file(format!("[BACKEND] Using audio path: {}", audio_path));
 
     let output = Command::new("afplay").arg(audio_path).spawn();
 

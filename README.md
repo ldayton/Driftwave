@@ -41,3 +41,9 @@ Regenerate FMOD FFI bindings:
 ```bash
 cd tools && cargo run --bin generate_bindings
 ```
+
+## Package
+
+```bash
+npm run tauri build
+```

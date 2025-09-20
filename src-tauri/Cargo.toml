@@ -4,6 +4,9 @@ version = "0.1.0"
 edition = "2021"
 default-run = "driftwave"
 
+[features]
+custom-protocol = ["tauri/custom-protocol"]
+
 [[bin]]
 name = "cli"
 path = "src/bin/cli.rs"
