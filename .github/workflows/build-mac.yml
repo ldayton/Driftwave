@@ -1,0 +1,59 @@
+name: Build Mac App
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build Tauri app (Universal Binary)
+        run: npm run tauri build -- --target universal-apple-darwin
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+
+      - name: Upload .app bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: Driftwave-mac-app
+          path: src-tauri/target/universal-apple-darwin/release/bundle/macos/*.app
+          retention-days: 7
+
+      - name: Upload .dmg installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: Driftwave-mac-dmg
+          path: src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg
+          retention-days: 7
+
+      - name: List build artifacts
+        run: |
+          echo "=== Build artifacts ==="
+          ls -la src-tauri/target/universal-apple-darwin/release/bundle/macos/
+          ls -la src-tauri/target/universal-apple-darwin/release/bundle/dmg/
