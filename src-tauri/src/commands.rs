@@ -2,7 +2,7 @@ use std::env;
 use std::fs::OpenOptions;
 use std::io::Write;
 use std::process::Command;
-use tauri::{path::BaseDirectory, Manager};
+use tauri::{Manager, path::BaseDirectory};
 
 #[tauri::command]
 pub fn log_to_file(message: String) -> Result<(), String> {

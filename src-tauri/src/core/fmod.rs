@@ -57,7 +57,7 @@ impl Player for FmodPlayer {
                 None => {
                     return Err(PlayerError {
                         message: "Invalid path encoding".to_string(),
-                    })
+                    });
                 }
             };
             let result = fmod_sys::FMOD_System_CreateSound(
