@@ -7,6 +7,7 @@ on:
 
 jobs:
   build:
+    if: ${{ !contains(github.event.head_commit.message, '[skip windows]') }}
     runs-on: windows-2025
 
     steps:

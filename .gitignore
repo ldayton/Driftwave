@@ -1,6 +1,9 @@
 .DS_Store
 /target
 /src-tauri/target
+/src-core/target
+/src-web/target
+/src-web/pkg
 /tools/target
 **/*.rs.bk
 *.pdb
@@ -9,3 +12,5 @@ node_modules
 *.log
 /src-tauri/gen
 *.bak
+
+

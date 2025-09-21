@@ -7,6 +7,7 @@ on:
 
 jobs:
   build:
+    if: ${{ !contains(github.event.head_commit.message, '[skip web]') }}
     runs-on: ubuntu-24.04
 
     steps:
@@ -43,7 +44,8 @@ jobs:
     - name: Build WASM module
       run: |
         cd src-web
-        wasm-pack build --target web --out-dir pkg
+        wasm-pack build --target web --out-dir pkg 2>&1 | tee ../build.log
+        tar -czf ../driftwave-web-wasm.tgz pkg/
       env:
         RUST_LOG: debug
 
@@ -51,11 +53,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: driftwave-web-wasm
-        path: src-web/pkg/
-
-    - name: Upload build log
-      uses: actions/upload-artifact@v4
-      with:
-        name: web-build-log
-        path: build.log
-      if: always()
+        path: driftwave-web-wasm.tgz
