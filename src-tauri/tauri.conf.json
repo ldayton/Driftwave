@@ -1,5 +1,5 @@
 {
-  "identifier": "com.driftwave.app",
+  "identifier": "com.github.ldayton.driftwave",
   "productName": "Driftwave",
   "mainBinaryName": "driftwave",
   "version": "0.1.0",

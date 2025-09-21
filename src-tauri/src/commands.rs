@@ -1,3 +1,4 @@
+#[warn(unused_imports)]
 use std::env;
 use std::fs::OpenOptions;
 use std::io::Write;
@@ -5,7 +6,7 @@ use std::sync::Mutex;
 use tauri::{Manager, path::BaseDirectory};
 
 use crate::core::fmod::FmodPlayer;
-use crate::core::player::{PlaybackState, Player};
+use crate::core::player::Player;
 
 #[tauri::command]
 pub fn log_to_file(message: String) -> Result<(), String> {

@@ -1,4 +1,4 @@
-use driftwave_core::{PlaybackListener, PlaybackState, Player, PlayerError};
+use driftwave_core::{PlaybackState, Player, PlayerError};
 use std::path::Path;
 use wasm_bindgen::prelude::*;
 use web_sys::{AudioBuffer, AudioBufferSourceNode, AudioContext};

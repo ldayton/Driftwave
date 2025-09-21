@@ -1,6 +1,8 @@
+#![allow(dead_code)]
+#![allow(unused_variables)]
+
 use std::path::Path;
 use symphonia::core::audio::AudioBuffer;
-use wide::f32x8;
 
 pub struct MipmapConfig {
     pub base_resolution: u32, // e.g., 512 samples per pixel
