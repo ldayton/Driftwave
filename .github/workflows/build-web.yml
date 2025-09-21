@@ -45,7 +45,8 @@ jobs:
       run: |
         cd src-web
         wasm-pack build --target web --out-dir pkg 2>&1 | tee ../build.log
-        tar -czf ../driftwave-web-wasm.tgz pkg/
+        mv pkg driftwave-web-wasm
+        tar -czf ../driftwave-web-wasm.tgz driftwave-web-wasm/
       env:
         RUST_LOG: debug
 
@@ -54,3 +55,10 @@ jobs:
       with:
         name: driftwave-web-wasm
         path: driftwave-web-wasm.tgz
+
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: web-build-log
+        path: build.log
