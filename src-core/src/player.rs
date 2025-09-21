@@ -12,9 +12,10 @@ pub trait Player {
 
     fn load(&mut self, path: &Path) -> Result<Self::Sound, PlayerError>;
 
-    fn play(
+    fn play_from(
         &mut self,
         sound: &mut Self::Sound,
+        start_frame: u64,
         listener: Option<Self::PlaybackListener>,
     ) -> Result<Self::Playback, PlayerError>;
 
@@ -26,8 +27,6 @@ pub trait Player {
     ) -> Result<Self::Playback, PlayerError>;
 
     fn pause(&mut self, sound: &mut Self::Playback) -> Result<Self::Playback, PlayerError>;
-
-    fn resume(&mut self, sound: &mut Self::Playback) -> Result<Self::Playback, PlayerError>;
 
     fn get_state(&mut self, playback: &mut Self::Playback) -> Result<PlaybackState, PlayerError>;
 

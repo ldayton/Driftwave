@@ -39,9 +39,10 @@ impl Player for WebPlayer {
         })
     }
 
-    fn play(
+    fn play_from(
         &mut self,
         sound: &mut Self::Sound,
+        start_frame: u64,
         _listener: Option<Self::PlaybackListener>,
     ) -> Result<Self::Playback, PlayerError> {
         let source = self
@@ -58,9 +59,14 @@ impl Player for WebPlayer {
                 message: format!("Failed to connect to destination: {:?}", e),
             })?;
 
-        source.start().map_err(|e| PlayerError {
-            message: format!("Failed to start playback: {:?}", e),
-        })?;
+        let sample_rate = self.context.sample_rate();
+        let start_time = start_frame as f64 / sample_rate as f64;
+
+        source
+            .start_with_when_and_grain_offset(0.0, start_time)
+            .map_err(|e| PlayerError {
+                message: format!("Failed to start playback: {:?}", e),
+            })?;
 
         Ok(WebPlayback {
             source,
@@ -115,12 +121,6 @@ impl Player for WebPlayer {
 
         Err(PlayerError {
             message: "Pause/resume not fully implemented yet".to_string(),
-        })
-    }
-
-    fn resume(&mut self, _playback: &mut Self::Playback) -> Result<Self::Playback, PlayerError> {
-        Err(PlayerError {
-            message: "Resume not implemented yet".to_string(),
         })
     }
 

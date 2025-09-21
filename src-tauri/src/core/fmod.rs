@@ -1,3 +1,15 @@
+#[cfg(target_os = "macos")]
+#[link(name = "fmod")]
+unsafe extern "C" {}
+
+#[cfg(target_os = "linux")]
+#[link(name = "fmod")]
+unsafe extern "C" {}
+
+#[cfg(target_os = "windows")]
+#[link(name = "fmod_vc")]
+unsafe extern "C" {}
+
 use super::dsp;
 use super::player::{PlaybackListener, PlaybackState, Player, PlayerError};
 use crate::ffi::fmod_sys;
@@ -9,6 +21,10 @@ use std::ptr;
 pub struct FmodPlayer {
     system: *mut fmod_sys::FMOD_SYSTEM,
 }
+
+// We're using FMOD_INIT_THREAD_UNSAFE - client must handle synchronization
+unsafe impl Send for FmodPlayer {}
+unsafe impl Sync for FmodPlayer {}
 
 impl FmodPlayer {
     pub fn new() -> Self {
@@ -76,9 +92,10 @@ impl Player for FmodPlayer {
         }
     }
 
-    fn play(
+    fn play_from(
         &mut self,
         sound: &mut FmodSound,
+        start_frame: u64,
         listener: Option<Self::PlaybackListener>,
     ) -> Result<FmodPlayback, PlayerError> {
         unsafe {
@@ -87,12 +104,29 @@ impl Player for FmodPlayer {
                 self.system,
                 sound.ptr,
                 ptr::null_mut(),
-                0, // not paused
+                1, // paused
                 &mut channel,
             );
             if result != fmod_sys::FMOD_RESULT_FMOD_OK {
                 return Err(PlayerError {
                     message: format!("Failed to play sound: {}", result),
+                });
+            }
+
+            // Set position
+            if start_frame > u32::MAX as u64 {
+                return Err(PlayerError {
+                    message: format!("Start frame {} exceeds u32 max", start_frame),
+                });
+            }
+            let result = fmod_sys::FMOD_Channel_SetPosition(
+                channel,
+                start_frame as u32,
+                fmod_sys::FMOD_TIMEUNIT_PCM,
+            );
+            if result != fmod_sys::FMOD_RESULT_FMOD_OK {
+                return Err(PlayerError {
+                    message: format!("Failed to set position: {}", result),
                 });
             }
 
@@ -153,6 +187,14 @@ impl Player for FmodPlayer {
                 }
             }
 
+            // Unpause after everything is set up
+            let result = fmod_sys::FMOD_Channel_SetPaused(channel, 0);
+            if result != fmod_sys::FMOD_RESULT_FMOD_OK {
+                return Err(PlayerError {
+                    message: format!("Failed to unpause: {}", result),
+                });
+            }
+
             Ok(FmodPlayback {
                 ptr: channel,
                 dsp,
@@ -208,7 +250,7 @@ impl Player for FmodPlayer {
             let stop_clock = parent_clock + duration_frames;
             let result = fmod_sys::FMOD_Channel_SetDelay(
                 channel, 0, // start immediately
-                stop_clock, 1, // stopchannels
+                stop_clock, 1, // stop channels
             );
             if result != fmod_sys::FMOD_RESULT_FMOD_OK {
                 return Err(PlayerError {
@@ -232,12 +274,6 @@ impl Player for FmodPlayer {
     fn pause(&mut self, _playback: &mut Self::Playback) -> Result<Self::Playback, PlayerError> {
         Err(PlayerError {
             message: "pause not implemented".to_string(),
-        })
-    }
-
-    fn resume(&mut self, _playback: &mut Self::Playback) -> Result<Self::Playback, PlayerError> {
-        Err(PlayerError {
-            message: "resume not implemented".to_string(),
         })
     }
 
@@ -295,11 +331,19 @@ pub struct FmodSound {
     ptr: *mut fmod_sys::FMOD_SOUND,
 }
 
+// We're using FMOD_INIT_THREAD_UNSAFE - client must handle synchronization
+unsafe impl Send for FmodSound {}
+unsafe impl Sync for FmodSound {}
+
 pub struct FmodPlayback {
     ptr: *mut fmod_sys::FMOD_CHANNEL,
     dsp: *mut fmod_sys::FMOD_DSP,
     callback_data: *mut dsp::DspCallbackData,
 }
+
+// We're using FMOD_INIT_THREAD_UNSAFE - client must handle synchronization
+unsafe impl Send for FmodPlayback {}
+unsafe impl Sync for FmodPlayback {}
 
 impl Drop for FmodPlayback {
     fn drop(&mut self) {
