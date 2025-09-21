@@ -20,6 +20,12 @@ Install Xcode from the App Store.
 
 See `.github/workflows/build-linux` for Ubuntu 24.04 instructions.
 
+You may also need to set this for `npm run dev` to work:
+
+```bash
+export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig:$PKG_CONFIG_PATH
+```
+
 ## Run
 
 ```bash
