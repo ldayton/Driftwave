@@ -4,8 +4,14 @@
 
 ### All platforms
 
-- Rust
+- [Rustup](https://rustup.rs)
 - Node
+
+For WASM development:
+```bash
+rustup target add wasm32-unknown-unknown
+cargo install wasm-pack
+```
 
 ### Windows extra setup
 
@@ -35,9 +41,11 @@ npm run dev
 
 ## Project structure
 
-- `src-tauri/` - Rust backend
+- `src-core/` - Shared Rust code (compiles to both native and WASM)
+- `src-tauri/` - Native desktop backend
   - `src/core/` - Audio processing logic
   - `src/ffi/` - FMOD bindings
+- `src-web/` - WASM module for browser
 - `src/` - Web frontend
 - `tools/` - Build utilities
 
@@ -46,6 +54,11 @@ npm run dev
 Enable git hooks for automatic code formatting:
 ```bash
 git config core.hooksPath .githooks
+```
+
+Build WASM module:
+```bash
+cd src-web && wasm-pack build --target web --out-dir pkg
 ```
 
 Regenerate FMOD FFI bindings:
