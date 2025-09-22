@@ -26,6 +26,12 @@ pub struct FmodPlayer {
 unsafe impl Send for FmodPlayer {}
 unsafe impl Sync for FmodPlayer {}
 
+impl Default for FmodPlayer {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl FmodPlayer {
     pub fn new() -> Self {
         FmodPlayer {

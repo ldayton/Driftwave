@@ -34,6 +34,12 @@ pub struct CpalPlayback {
 unsafe impl Send for CpalPlayback {}
 unsafe impl Sync for CpalPlayback {}
 
+impl Default for CpalPlayer {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl CpalPlayer {
     pub fn new() -> Self {
         CpalPlayer {
@@ -181,7 +187,7 @@ impl Player for CpalPlayer {
                             // Convert other formats to f32
                             let mut buf = symphonia::core::audio::AudioBuffer::new(
                                 audio_buf.frames() as u64,
-                                audio_buf.spec().clone(),
+                                *audio_buf.spec(),
                             );
                             audio_buf.convert(&mut buf);
                             let planes = buf.planes();
@@ -302,11 +308,11 @@ impl Player for CpalPlayer {
                             *pos += 1;
 
                             // Call listener periodically (every 1024 samples)
-                            if *pos % 1024 == 0 {
-                                if let Some(ref mut listener) = *listener_clone.lock().unwrap() {
-                                    let frame = *pos / channels as usize;
-                                    listener.on_progress(frame as u64);
-                                }
+                            if (*pos).is_multiple_of(1024)
+                                && let Some(ref mut listener) = *listener_clone.lock().unwrap()
+                            {
+                                let frame = *pos / channels as usize;
+                                listener.on_progress(frame as u64);
                             }
                         } else {
                             *sample = 0.0;

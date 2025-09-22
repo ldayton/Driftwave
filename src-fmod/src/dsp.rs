@@ -43,10 +43,10 @@ pub unsafe extern "C" fn progress_dsp_callback(
                         fmod_sys::FMOD_TIMEUNIT_PCM,
                     );
 
-                    if result == fmod_sys::FMOD_RESULT_FMOD_OK {
-                        if let Some(ref mut listener) = callback_data.listener {
-                            listener.on_progress(position as u64);
-                        }
+                    if result == fmod_sys::FMOD_RESULT_FMOD_OK
+                        && let Some(ref mut listener) = callback_data.listener
+                    {
+                        listener.on_progress(position as u64);
                     }
                 }
             }

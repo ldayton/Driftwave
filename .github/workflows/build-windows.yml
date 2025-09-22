@@ -43,8 +43,6 @@ jobs:
           npm run tauri build -- --verbose 2>&1 | tee build.log
           echo "Exit code: $?"
         env:
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
           RUST_LOG: debug
           RUST_BACKTRACE: full
 

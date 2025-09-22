@@ -1,7 +1,14 @@
 {
-  // Exclude heavy directories from search
   "search.exclude": {
     "**/target": true,
-    "src/ffi": true
-  }
+    "src-fmod/src/ffi": true,
+    "src-fmod/fmod": true,
+    "**/Cargo.lock": true,
+    "LICENSE": true,
+    "**/package-lock.json": true
+  },
+  "rust-analyzer.linkedProjects": [
+    "./Cargo.toml",
+    "./src-web/Cargo.toml"
+  ]
 }

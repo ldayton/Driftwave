@@ -1,9 +1,7 @@
-name: CI
+name: Core Build
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
     branches: [ main ]
 
 env:
@@ -111,3 +109,41 @@ jobs:
 
     - name: Run clippy
       run: cargo clippy -- -D warnings
+
+  wasm:
+    name: WASM Build
+    runs-on: ubuntu-24.04
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        targets: wasm32-unknown-unknown
+
+    - name: Install wasm-pack
+      run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+    - name: Cache cargo registry
+      uses: actions/cache@v3
+      with:
+        path: ~/.cargo/registry
+        key: ${{ runner.os }}-cargo-wasm-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Cache cargo index
+      uses: actions/cache@v3
+      with:
+        path: ~/.cargo/git
+        key: ${{ runner.os }}-cargo-wasm-index-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Build WASM module
+      run: |
+        cd src-web
+        wasm-pack build --target web --out-dir pkg
+
+    - name: Upload WASM package
+      uses: actions/upload-artifact@v3
+      with:
+        name: driftwave-wasm
+        path: src-web/pkg/
