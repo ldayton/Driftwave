@@ -2,15 +2,14 @@
 	Driftwave
 </h1>
 
+## Waveform visualization that's fast, accurate, and portable
+
 <p align="center">
-  <a href="https://github.com/ldayton/Driftwave/actions/workflows/core-build.yml"><img src="https://github.com/ldayton/Driftwave/actions/workflows/ci.yml/badge.svg">
-  <a href="https://github.com/ldayton/Driftwave/actions/workflows/docs.yml"><img src="https://github.com/ldayton/Driftwave/actions/workflows/docs.yml/badge.svg">
-  <br />
-  <a href="https://github.com/ldayton/Driftwave/actions/workflows/build-windows.yml"><img src="https://github.com/ldayton/Driftwave/actions/workflows/build-windows.yml/badge.svg">
-  <a href="https://github.com/ldayton/Driftwave/actions/workflows/build-mac.yml"><img src="https://github.com/ldayton/Driftwave/actions/workflows/build-mac.yml/badge.svg">
-  <a href="https://github.com/ldayton/Driftwave/actions/workflows/build-linux.yml"><img src="https://github.com/ldayton/Driftwave/actions/workflows/build-linux.yml/badge.svg">
+  <a href="https://github.com/ldayton/Driftwave/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/ldayton/Driftwave/ci.yml?style=for-the-badge&label=WASM&color=brightgreen&logo=webassembly&logoColor=white"></a>
+  <a href="https://github.com/ldayton/Driftwave/actions/workflows/docs.yml"><img src="https://img.shields.io/github/actions/workflow/status/ldayton/Driftwave/docs.yml?style=for-the-badge&label=Docs&color=brightgreen&logo=mdbook&logoColor=white"></a>
+  <br>
+  <a href="https://github.com/ldayton/Driftwave/actions/workflows/build-windows.yml"><img src="https://img.shields.io/github/actions/workflow/status/ldayton/Driftwave/build-windows.yml?style=for-the-badge&label=Windows&color=brightgreen&logo=windows&logoColor=white"></a>
+  <a href="https://github.com/ldayton/Driftwave/actions/workflows/build-mac.yml"><img src="https://img.shields.io/github/actions/workflow/status/ldayton/Driftwave/build-mac.yml?style=for-the-badge&label=Mac&color=brightgreen&logo=apple&logoColor=white"></a>
+  <a href="https://github.com/ldayton/Driftwave/actions/workflows/build-linux.yml"><img src="https://img.shields.io/github/actions/workflow/status/ldayton/Driftwave/build-linux.yml?style=for-the-badge&label=Linux&color=brightgreen&logo=linux&logoColor=white"></a>
 </p>
-
-## Waveform visualization with research-grade accuracy and developer-grade portability
-
 🚧 In progress
