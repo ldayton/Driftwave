@@ -1,4 +1,4 @@
-name: Core Build
+name: WASM
 
 on:
   push:
