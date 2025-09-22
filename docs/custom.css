@@ -1,0 +1,171 @@
+/* Modern black, white, and blue theme */
+
+:root {
+    --sidebar-bg: #ffffff !important;
+    --sidebar-fg: #000000 !important;
+    --sidebar-active: #0066ff !important;
+    --page-bg: #ffffff !important;
+    --page-fg: #000000 !important;
+    --content-max-width: 900px !important;
+    --table-border-color: #e0e0e0 !important;
+}
+
+/* Light theme overrides */
+.light {
+    --bg: #ffffff !important;
+    --fg: #000000 !important;
+    --sidebar-bg: #ffffff !important;
+    --sidebar-fg: #000000 !important;
+    --sidebar-active: #0066ff !important;
+    --links: #0066ff !important;
+    --inline-code-color: #000000 !important;
+    --theme-popup-bg: #ffffff !important;
+    --theme-popup-border: #e0e0e0 !important;
+    --quote-bg: #f9f9f9 !important;
+    --table-border-color: #e0e0e0 !important;
+    --table-header-bg: #ffffff !important;
+    --table-alternate-bg: #ffffff !important;
+    --searchbar-bg: #ffffff !important;
+    --searchbar-fg: #000000 !important;
+    --searchbar-border-color: #e0e0e0 !important;
+    --searchbar-shadow-color: rgba(0, 0, 0, 0.1) !important;
+    --searchresults-header-fg: #666 !important;
+    --searchresults-border-color: #e0e0e0 !important;
+}
+
+/* Dark theme - high contrast black */
+.ayu, .navy, .coal {
+    --bg: #000000 !important;
+    --fg: #ffffff !important;
+    --sidebar-bg: #0a0a0a !important;
+    --sidebar-fg: #ffffff !important;
+    --sidebar-active: #4d9fff !important;
+    --links: #4d9fff !important;
+    --inline-code-color: #ffffff !important;
+    --theme-popup-bg: #0a0a0a !important;
+    --theme-popup-border: #333 !important;
+    --quote-bg: #0a0a0a !important;
+    --table-border-color: #333 !important;
+    --table-header-bg: #0a0a0a !important;
+    --table-alternate-bg: #050505 !important;
+    --searchbar-bg: #0a0a0a !important;
+    --searchbar-fg: #ffffff !important;
+    --searchbar-border-color: #333 !important;
+}
+
+/* Clean modern typography */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
+    font-size: 16px !important;
+}
+
+code, pre {
+    font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", monospace !important;
+    font-size: 14px !important;
+}
+
+/* Homepage title */
+.content h1:first-child {
+    font-size: 3.5em;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    text-align: center;
+    margin-bottom: 0.3em;
+}
+
+/* Tagline */
+.content > p:first-of-type {
+    text-align: center;
+    font-size: 1.25em;
+    font-weight: 400;
+    opacity: 0.7;
+    margin-bottom: 3em;
+}
+
+/* Headers */
+.content h2 {
+    font-weight: 700;
+    margin-top: 3em;
+    margin-bottom: 1em;
+    padding-bottom: 0.3em;
+    border-bottom: 1px solid var(--table-border-color);
+}
+
+.content h3 {
+    font-weight: 600;
+    margin-top: 2em;
+}
+
+/* Links - blue accent */
+.content a {
+    color: #0066ff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.light .content a {
+    color: #0066ff;
+}
+
+.ayu .content a, .navy .content a, .coal .content a {
+    color: #4d9fff;
+}
+
+.content a:hover {
+    text-decoration: underline;
+}
+
+/* Code blocks - clean borders */
+pre {
+    border-radius: 8px;
+    border: 1px solid var(--table-border-color) !important;
+    padding: 1em !important;
+}
+
+.light pre {
+    background: #f9f9f9 !important;
+}
+
+.ayu pre, .navy pre, .coal pre {
+    background: #0a0a0a !important;
+}
+
+/* Inline code */
+.light code:not(pre code) {
+    background: #f5f5f5 !important;
+    padding: 0.2em 0.4em !important;
+    border-radius: 4px;
+}
+
+.ayu code:not(pre code), .navy code:not(pre code), .coal code:not(pre code) {
+    background: #1a1a1a !important;
+    padding: 0.2em 0.4em !important;
+    border-radius: 4px;
+}
+
+/* Sidebar - minimal */
+.sidebar {
+    font-size: 15px !important;
+    border-right: 1px solid var(--table-border-color);
+}
+
+.chapter li.chapter-item {
+    margin: 0.5em 0;
+}
+
+.chapter li.active > a {
+    color: #0066ff !important;
+    font-weight: 600;
+}
+
+/* Clean buttons */
+.nav-chapters {
+    font-size: 2em;
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+    .content h1:first-child {
+        font-size: 2.5em;
+    }
+}

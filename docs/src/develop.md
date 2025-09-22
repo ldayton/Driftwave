@@ -1,4 +1,4 @@
-# Developer Guide
+# Development Guide
 
 ## Building the library
 

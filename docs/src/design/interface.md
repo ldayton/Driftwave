@@ -1,4 +1,6 @@
-# Waveform Renderer Interface Design
+# Interface
+
+## Waveform Renderer Interface Design
 
 ## Core philosophy
 
