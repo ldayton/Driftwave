@@ -1,0 +1,15 @@
+[package]
+name = "driftwave-fmod"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+driftwave-core = { path = "../src-core" }
+libloading = "0.8"
+
+[lib]
+name = "driftwave_fmod"
+path = "src/lib.rs"

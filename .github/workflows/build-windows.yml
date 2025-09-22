@@ -19,6 +19,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: examples/tauri/package-lock.json
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
@@ -28,12 +29,14 @@ jobs:
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
-          workspaces: './src-tauri -> target'
+          workspaces: './examples/tauri/src-tauri -> target'
 
       - name: Install frontend dependencies
+        working-directory: examples/tauri
         run: npm ci
 
       - name: Build Tauri app
+        working-directory: examples/tauri
         shell: bash
         run: |
           set -x
@@ -49,13 +52,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Driftwave-windows-exe
-          path: target/release/bundle/nsis/*.exe
+          path: examples/tauri/src-tauri/target/release/bundle/nsis/*.exe
           retention-days: 7
 
       - name: List build artifacts
         run: |
           echo "=== Build artifacts ==="
-          dir target\release\bundle\nsis\
+          dir examples\tauri\src-tauri\target\release\bundle\nsis\
 
       - name: Upload build log
         uses: actions/upload-artifact@v4

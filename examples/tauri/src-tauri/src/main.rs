@@ -4,8 +4,6 @@
 )]
 
 mod commands;
-mod core;
-mod ffi;
 
 use commands::AudioState;
 

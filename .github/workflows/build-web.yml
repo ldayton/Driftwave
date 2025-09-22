@@ -13,11 +13,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-
     - name: Setup Rust
       uses: dtolnay/rust-toolchain@stable
       with:
@@ -37,9 +32,6 @@ jobs:
           ~/.cargo/git/db/
           target/
         key: ${{ runner.os }}-cargo-wasm-${{ hashFiles('**/Cargo.lock') }}
-
-    - name: Install Node dependencies
-      run: npm ci
 
     - name: Build WASM module
       run: |

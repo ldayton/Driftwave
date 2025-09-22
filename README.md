@@ -4,7 +4,7 @@ A waveform visualization engine built with research-grade accuracy and developer
 
 ## Why Driftwave?
 
-Most waveform tools compromise on either precision or portability. Driftwave doesn’t. It delivers research-grade accuracy and GPU-powered performance in one engine—built for engineers, scientists, and developers who need sample-perfect visualization as the backbone of serious analysis and annotation.
+Most waveform tools compromise on either precision or portability. Driftwave doesn’t. It delivers research-grade accuracy for engineers, scientists, and developers in a form that can be consumed in any environment.
 
 ## Project goals
 

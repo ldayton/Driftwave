@@ -1,53 +1,46 @@
 # Developer Guide
 
-## Setup
+## Building the library
 
-### All platforms
+### Prerequisites
 
+All platforms:
 - [Rustup](https://rustup.rs)
-- Node
 
-For WASM development:
+For WASM support:
 ```bash
 rustup target add wasm32-unknown-unknown
 cargo install wasm-pack
 ```
 
-### Windows extra setup
-
-Install [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) or Visual Studio 2022.
-During installation, select "Desktop development with C++" workload.
-
-### Mac extra setup
-
-Install Xcode from the App Store.
-
-### Linux extra setup
-
-See `.github/workflows/build-linux` for Ubuntu 24.04 instructions.
-
-You may also need to set this for `npm run dev` to work:
+### Build
 
 ```bash
-export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig:$PKG_CONFIG_PATH
+# Build all workspace members (core, fmod, tools)
+cargo build
+
+# Build specific crates
+cargo build -p driftwave-core    # Core traits and types
+cargo build -p driftwave-fmod    # FMOD audio implementation
+
+# Build WASM module for web
+cd src-web && wasm-pack build --target web --out-dir pkg
+
+# Build release mode
+cargo build --release
 ```
 
-## Run
+## Project Structure
 
-```bash
-npm install
-npm run dev
-```
+- `src-core/` - Core traits and shared types (Player trait, etc.)
+- `src-fmod/` - FMOD audio implementation for desktop
+- `src-web/` - Web Audio API implementation (WASM, not in workspace)
+- `tools/` - Build utilities and code generation
+- `examples/` - Standalone example applications
 
-## Project structure
+## Running Examples
 
-- `src-core/` - Shared Rust code (compiles to both native and WASM)
-- `src-tauri/` - Native desktop backend
-  - `src/core/` - Audio processing logic
-  - `src/ffi/` - FMOD bindings
-- `src-web/` - WASM module for browser
-- `src/` - Web frontend
-- `tools/` - Build utilities
+Examples are standalone projects with their own dependencies. See the README in each example directory for specific instructions.
 
 ## Develop
 
@@ -56,12 +49,7 @@ Enable git hooks for automatic code formatting:
 git config core.hooksPath .githooks
 ```
 
-Build WASM module:
-```bash
-cd src-web && wasm-pack build --target web --out-dir pkg
-```
-
 Regenerate FMOD FFI bindings:
 ```bash
-cd tools && cargo run --bin generate_bindings
+cargo run --bin generate_bindings
 ```

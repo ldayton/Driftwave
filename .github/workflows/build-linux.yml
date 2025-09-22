@@ -45,12 +45,15 @@ jobs:
           ~/.cargo/registry/cache/
           ~/.cargo/git/db/
           target/
+          examples/tauri/src-tauri/target/
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
     - name: Install Node dependencies
+      working-directory: examples/tauri
       run: npm ci
 
     - name: Build Tauri app
+      working-directory: examples/tauri
       run: |
         set -x
         RUST_LOG=debug npm run tauri build -- -- --bin driftwave --verbose 2>&1 | tee build.log
@@ -64,17 +67,17 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: driftwave-linux-deb
-        path: target/release/bundle/deb/*.deb
+        path: examples/tauri/src-tauri/target/release/bundle/deb/*.deb
 
     - name: Upload rpm artifact
       uses: actions/upload-artifact@v4
       with:
         name: driftwave-linux-rpm
-        path: target/release/bundle/rpm/*.rpm
+        path: examples/tauri/src-tauri/target/release/bundle/rpm/*.rpm
 
     - name: Upload build log
       uses: actions/upload-artifact@v4
       with:
         name: linux-build-log
-        path: build.log
+        path: examples/tauri/build.log
       if: always()

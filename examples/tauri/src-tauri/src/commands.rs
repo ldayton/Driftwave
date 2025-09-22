@@ -5,8 +5,8 @@ use std::io::Write;
 use std::sync::Mutex;
 use tauri::{Manager, path::BaseDirectory};
 
-use crate::core::fmod::FmodPlayer;
-use crate::core::player::Player;
+use driftwave_core::Player;
+use driftwave_cpal::CpalPlayer;
 
 #[tauri::command]
 pub fn log_to_file(message: String) -> Result<(), String> {
@@ -89,16 +89,16 @@ pub fn stop_audio(state: tauri::State<AudioState>) -> Result<String, String> {
     }
 }
 
-// Audio state with FMOD player
+// Audio state with CPAL player
 pub struct AudioState {
-    player: Mutex<FmodPlayer>,
-    current_sound: Mutex<Option<<FmodPlayer as Player>::Sound>>,
-    current_playback: Mutex<Option<<FmodPlayer as Player>::Playback>>,
+    player: Mutex<CpalPlayer>,
+    current_sound: Mutex<Option<<CpalPlayer as Player>::Sound>>,
+    current_playback: Mutex<Option<<CpalPlayer as Player>::Playback>>,
 }
 
 impl AudioState {
     pub fn new() -> Result<Self, String> {
-        let mut player = FmodPlayer::new();
+        let mut player = CpalPlayer::new();
         player.init().map_err(|e| e.to_string())?;
 
         Ok(Self {

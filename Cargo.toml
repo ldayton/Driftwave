@@ -1,3 +1,16 @@
+[workspace.package]
+edition = "2024"
+version = "0.1.0"
+authors = ["Lily Dayton"]
+license = "MIT"
+repository = "https://github.com/ldayton/Driftwave"
+
 [workspace]
-members = ["src-core", "src-tauri", "src-web", "tools"]
+members = [
+    "src-core",
+    "src-cpal",
+    "src-fmod",
+    "tools"
+]
 resolver = "2"
+exclude = ["examples", "src-web"]

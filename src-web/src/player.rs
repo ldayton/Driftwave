@@ -113,6 +113,8 @@ impl Player for WebPlayer {
     }
 
     fn pause(&mut self, playback: &mut Self::Playback) -> Result<Self::Playback, PlayerError> {
+        // Note: web-sys incorrectly marks stop() as deprecated, but it's not deprecated in Web Audio API
+        #[allow(deprecated)]
         playback.source.stop().map_err(|e| PlayerError {
             message: format!("Failed to stop playback: {:?}", e),
         })?;

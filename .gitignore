@@ -1,16 +1,16 @@
 .DS_Store
 /target
-/src-tauri/target
 /src-core/target
+/src-fmod/target
 /src-web/target
 /src-web/pkg
+/src-web/Cargo.lock
 /tools/target
 **/*.rs.bk
 *.pdb
-/dist
-node_modules
 *.log
-/src-tauri/gen
 *.bak
+*.tgz
+/wasm-artifact
 
 

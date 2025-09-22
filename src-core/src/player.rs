@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use std::fmt;
 use std::path::Path;
 
@@ -45,10 +43,11 @@ pub trait Player {
     fn close(&mut self) -> Result<(), PlayerError>;
 }
 
-pub trait PlaybackListener {
+pub trait PlaybackListener: Send {
     fn on_progress(&mut self, position_frames: u64);
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum PlaybackState {
     Playing,
     Paused,

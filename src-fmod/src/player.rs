@@ -10,9 +10,9 @@ unsafe extern "C" {}
 #[link(name = "fmod_vc")]
 unsafe extern "C" {}
 
-use super::dsp;
-use super::player::{PlaybackListener, PlaybackState, Player, PlayerError};
+use crate::dsp;
 use crate::ffi::fmod_sys;
+use driftwave_core::{PlaybackListener, PlaybackState, Player, PlayerError};
 
 use std::ffi::CString;
 use std::path::Path;

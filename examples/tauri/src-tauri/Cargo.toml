@@ -11,7 +11,8 @@ custom-protocol = ["tauri/custom-protocol"]
 
 
 [dependencies]
-driftwave-core = { path = "../src-core" }
+driftwave-core = { path = "../../../src-core" }
+driftwave-cpal = { path = "../../../src-cpal" }
 bindgen = "*"
 symphonia = { version = "0.5.4", features = ["all"] }
 wide = "0.7"

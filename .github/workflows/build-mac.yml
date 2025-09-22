@@ -19,6 +19,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: examples/tauri/package-lock.json
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
@@ -38,12 +39,14 @@ jobs:
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
-          workspaces: './src-tauri -> target'
+          workspaces: './examples/tauri/src-tauri -> target'
 
       - name: Install frontend dependencies
+        working-directory: examples/tauri
         run: npm ci
 
       - name: Build Tauri app for x86_64
+        working-directory: examples/tauri
         run: |
           set -x
           RUST_LOG=debug npm run tauri build -- --target x86_64-apple-darwin --verbose 2>&1 | tee build-x86_64.log
@@ -55,6 +58,7 @@ jobs:
           RUST_BACKTRACE: full
 
       - name: Build Tauri app for aarch64
+        working-directory: examples/tauri
         run: |
           set -x
           RUST_LOG=debug npm run tauri build -- --target aarch64-apple-darwin --verbose 2>&1 | tee build-aarch64.log
@@ -69,38 +73,38 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Driftwave-mac-app-x86_64
-          path: target/x86_64-apple-darwin/release/bundle/macos/*.app
+          path: examples/tauri/src-tauri/target/x86_64-apple-darwin/release/bundle/macos/*.app
           retention-days: 7
 
       - name: Upload .dmg installer (x86_64)
         uses: actions/upload-artifact@v4
         with:
           name: Driftwave-mac-dmg-x86_64
-          path: target/x86_64-apple-darwin/release/bundle/dmg/*.dmg
+          path: examples/tauri/src-tauri/target/x86_64-apple-darwin/release/bundle/dmg/*.dmg
           retention-days: 7
 
       - name: Upload .app bundle (aarch64)
         uses: actions/upload-artifact@v4
         with:
           name: Driftwave-mac-app-aarch64
-          path: target/aarch64-apple-darwin/release/bundle/macos/*.app
+          path: examples/tauri/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/*.app
           retention-days: 7
 
       - name: Upload .dmg installer (aarch64)
         uses: actions/upload-artifact@v4
         with:
           name: Driftwave-mac-dmg-aarch64
-          path: target/aarch64-apple-darwin/release/bundle/dmg/*.dmg
+          path: examples/tauri/src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg
           retention-days: 7
 
       - name: List build artifacts
         run: |
           echo "=== Build artifacts (x86_64) ==="
-          ls -la target/x86_64-apple-darwin/release/bundle/macos/ || true
-          ls -la target/x86_64-apple-darwin/release/bundle/dmg/ || true
+          ls -la examples/tauri/src-tauri/target/x86_64-apple-darwin/release/bundle/macos/ || true
+          ls -la examples/tauri/src-tauri/target/x86_64-apple-darwin/release/bundle/dmg/ || true
           echo "=== Build artifacts (aarch64) ==="
-          ls -la target/aarch64-apple-darwin/release/bundle/macos/ || true
-          ls -la target/aarch64-apple-darwin/release/bundle/dmg/ || true
+          ls -la examples/tauri/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/ || true
+          ls -la examples/tauri/src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/ || true
 
       - name: Upload build logs
         uses: actions/upload-artifact@v4

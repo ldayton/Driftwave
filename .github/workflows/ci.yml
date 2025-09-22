@@ -1,0 +1,113 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    name: Test - ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Install ALSA dev (Linux only)
+      if: matrix.os == 'ubuntu-latest'
+      run: sudo apt-get update && sudo apt-get install -y libasound2-dev
+
+    - name: Cache cargo registry
+      uses: actions/cache@v3
+      with:
+        path: ~/.cargo/registry
+        key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Cache cargo index
+      uses: actions/cache@v3
+      with:
+        path: ~/.cargo/git
+        key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Cache cargo build
+      uses: actions/cache@v3
+      with:
+        path: target
+        key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Build workspace
+      run: cargo build --verbose
+
+    - name: Run tests
+      run: cargo test --verbose
+
+    - name: Build release
+      run: cargo build --release --verbose
+
+    - name: List all artifacts (Linux/macOS)
+      if: matrix.os != 'windows-latest'
+      run: |
+        echo "=== Release artifacts ==="
+        ls -la target/release/*.{a,so,dylib,rlib} 2>/dev/null || true
+
+    - name: List all artifacts (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        echo "=== Release artifacts ==="
+        dir target\release\*.lib target\release\*.dll target\release\*.rlib 2>nul || true
+
+    - name: Upload core library artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: libs-${{ matrix.os }}
+        path: |
+          target/release/libdriftwave_core.*
+          target/release/libdriftwave_cpal.*
+          target/release/libdriftwave_fmod.*
+          target/release/driftwave_core.*
+          target/release/driftwave_cpal.*
+          target/release/driftwave_fmod.*
+          target/release/*.rlib
+
+  fmt:
+    name: Rustfmt
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        components: rustfmt
+
+    - name: Check formatting
+      run: cargo fmt -- --check
+
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        components: clippy
+
+    - name: Install ALSA dev
+      run: sudo apt-get update && sudo apt-get install -y libasound2-dev
+
+    - name: Run clippy
+      run: cargo clippy -- -D warnings

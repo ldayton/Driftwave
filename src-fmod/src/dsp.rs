@@ -1,5 +1,5 @@
-use super::player::PlaybackListener;
 use crate::ffi::fmod_sys;
+use driftwave_core::PlaybackListener;
 
 use std::ffi::c_void;
 use std::ptr;
