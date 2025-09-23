@@ -3,7 +3,7 @@
 	Driftwave
 </h1>
 
-## Waveform visualization that's fast, accurate, and portable
+## Audio waveform visualization that's fast, accurate, and portable
 
 <p align="center">
   <a href="https://github.com/ldayton/Driftwave/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/ldayton/Driftwave/ci.yml?job=wasm&style=for-the-badge&label=WASM"></a>
