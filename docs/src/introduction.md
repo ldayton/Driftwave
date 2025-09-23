@@ -3,7 +3,7 @@
 	Driftwave
 </h1>
 
-## Waveform visualization that's fast, accurate, and portable
+## Audio waveform visualization that's fast, accurate, and portable
 
 Driftwave provides:
 
