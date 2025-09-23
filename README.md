@@ -1,5 +1,5 @@
 <h1 align="center">
-	<img src="https://raw.githubusercontent.com/ldayton/Driftwave/main/assets/driftwave-logo.png" width="150" alt="Logo"/><br/>
+	<img src="https://raw.githubusercontent.com/ldayton/Driftwave/main/assets/logo.png" width="150" alt="Logo"/><br/>
 	Driftwave
 </h1>
 

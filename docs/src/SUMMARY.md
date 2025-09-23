@@ -17,3 +17,8 @@
 # Design Docs
 
 - [API Documentation](./design/interface.md)
+
+# Prior Art
+
+- [WaveSurfer.js](./design/wavesurferjs.md)
+- [Peaks.js](./design/peaksjs.md)

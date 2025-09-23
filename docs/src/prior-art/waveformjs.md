@@ -44,6 +44,7 @@ classDiagram
         +getCurrentTime(): number
         +getVolume(): number
         +setVolume(volume)
+        +getMuted(): boolean
         +setMuted(muted)
         +getPlaybackRate(): number
         +setPlaybackRate(rate)
@@ -180,7 +181,7 @@ classDiagram
         +drag: boolean
         +resize: boolean
         +color: string
-        +content: HTMLElement
+        +content?: HTMLElement
         +play()
         +remove()
         +update(params)
@@ -198,21 +199,17 @@ classDiagram
 
     class SpectrogramPlugin {
         +options: SpectrogramOptions
-        +getFrequencies(): Float32Array
     }
 
     class RecordPlugin {
         +startRecording(): Promise
         +stopRecording(): Promise
-        +pauseRecording()
-        +resumeRecording()
-        +getRecordedData(): Blob
+        +pauseRecording(): Promise
+        +resumeRecording(): Promise
     }
 
     class ZoomPlugin {
-        +zoomIn()
-        +zoomOut()
-        +setZoom(level)
+        +options: ZoomPluginOptions
     }
 
     BasePlugin <|-- RegionsPlugin
@@ -221,6 +218,8 @@ classDiagram
     BasePlugin <|-- SpectrogramPlugin
     BasePlugin <|-- RecordPlugin
     BasePlugin <|-- ZoomPlugin
+    BasePlugin <|-- HoverPlugin
+    BasePlugin <|-- EnvelopePlugin
 
     RegionsPlugin --> Region : manages
 ```
@@ -298,7 +297,7 @@ graph LR
 - `getMuted()` - Get mute state
 - `setMuted(muted)` - Set mute state
 - `getPlaybackRate()` - Get playback speed
-- `setPlaybackRate(rate)` - Set playback speed
+- `setPlaybackRate(rate, preservePitch?)` - Set playback speed
 
 ### Visualization
 - `zoom(minPxPerSec)` - Change zoom level
@@ -309,11 +308,9 @@ graph LR
 ### Plugin Management
 - `registerPlugin(plugin)` - Add plugin
 - `unregisterPlugin(plugin)` - Remove plugin
-- `getActivePlugins()` - Get all plugins
 
 ### Lifecycle
 - `destroy()` - Clean up and destroy instance
-- `setOptions(options)` - Update options
 - `empty()` - Clear waveform
 
 ## Usage Example

@@ -1,6 +1,9 @@
-# Driftwave
+<h1 align="center">
+	<img src="https://raw.githubusercontent.com/ldayton/Driftwave/main/assets/logo.png" width="150" alt="Logo"/><br/>
+	Driftwave
+</h1>
 
-**Waveform visualization with research-grade accuracy and developer-grade portability**
+## Waveform visualization that's fast, accurate, and portable
 
 Driftwave provides:
 
