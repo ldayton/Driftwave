@@ -1,4 +1,4 @@
-name: WASM
+name: Build Driftwave
 
 on:
   push:
@@ -8,12 +8,9 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  test:
-    name: Test - ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+  linux:
+    name: Linux
+    runs-on: ubuntu-24.04
 
     steps:
     - uses: actions/checkout@v4
@@ -21,8 +18,7 @@ jobs:
     - name: Install Rust
       uses: dtolnay/rust-toolchain@stable
 
-    - name: Install ALSA dev (Linux only)
-      if: matrix.os == 'ubuntu-latest'
+    - name: Install ALSA dev
       run: sudo apt-get update && sudo apt-get install -y libasound2-dev
 
     - name: Cache cargo registry
@@ -60,23 +56,15 @@ jobs:
         mkdir -p crate-artifacts
         cp target/package/*.crate crate-artifacts/
 
-    - name: List all artifacts (Linux/macOS)
-      if: matrix.os != 'windows-latest'
+    - name: List all artifacts
       run: |
         echo "=== Release artifacts ==="
-        ls -la target/release/*.{a,so,dylib,rlib} 2>/dev/null || true
-
-    - name: List all artifacts (Windows)
-      if: matrix.os == 'windows-latest'
-      shell: cmd
-      run: |
-        echo === Release artifacts ===
-        dir target\release\*.lib target\release\*.dll target\release\*.rlib 2>nul || exit /b 0
+        ls -la target/release/*.{a,so,rlib} 2>/dev/null || true
 
     - name: Upload library artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: libs-${{ matrix.os }}
+        name: libs-linux
         path: |
           target/release/libdriftwave_core.*
           target/release/libdriftwave_cpal.*
@@ -88,7 +76,144 @@ jobs:
     - name: Upload crate packages
       uses: actions/upload-artifact@v4
       with:
-        name: crates-${{ matrix.os }}
+        name: crates-linux
+        path: crate-artifacts/*.crate
+
+  macos:
+    name: macOS
+    runs-on: macos-15
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Cache cargo registry
+      uses: actions/cache@v4
+      with:
+        path: ~/.cargo/registry
+        key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Cache cargo index
+      uses: actions/cache@v4
+      with:
+        path: ~/.cargo/git
+        key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Cache cargo build
+      uses: actions/cache@v4
+      with:
+        path: target
+        key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Build workspace
+      run: cargo build --verbose
+
+    - name: Run tests
+      run: cargo test --verbose
+
+    - name: Build release
+      run: cargo build --release --verbose
+
+    - name: Package crates
+      run: |
+        cargo package -p driftwave-core --no-verify
+        cargo package -p driftwave-cpal --no-verify
+        cargo package -p driftwave-fmod --no-verify
+        mkdir -p crate-artifacts
+        cp target/package/*.crate crate-artifacts/
+
+    - name: List all artifacts
+      run: |
+        echo "=== Release artifacts ==="
+        ls -la target/release/*.{a,dylib,rlib} 2>/dev/null || true
+
+    - name: Upload library artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: libs-macos
+        path: |
+          target/release/libdriftwave_core.*
+          target/release/libdriftwave_cpal.*
+          target/release/libdriftwave_fmod.*
+          target/release/driftwave_core.*
+          target/release/driftwave_cpal.*
+          target/release/driftwave_fmod.*
+
+    - name: Upload crate packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: crates-macos
+        path: crate-artifacts/*.crate
+
+  windows:
+    name: Windows
+    runs-on: windows-2025
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Cache cargo registry
+      uses: actions/cache@v4
+      with:
+        path: ~/.cargo/registry
+        key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Cache cargo index
+      uses: actions/cache@v4
+      with:
+        path: ~/.cargo/git
+        key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Cache cargo build
+      uses: actions/cache@v4
+      with:
+        path: target
+        key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Build workspace
+      run: cargo build --verbose
+
+    - name: Run tests
+      run: cargo test --verbose
+
+    - name: Build release
+      run: cargo build --release --verbose
+
+    - name: Package crates
+      run: |
+        cargo package -p driftwave-core --no-verify
+        cargo package -p driftwave-cpal --no-verify
+        cargo package -p driftwave-fmod --no-verify
+        mkdir -p crate-artifacts
+        cp target/package/*.crate crate-artifacts/
+
+    - name: List all artifacts
+      shell: cmd
+      run: |
+        echo === Release artifacts ===
+        dir target\release\*.lib target\release\*.dll target\release\*.rlib 2>nul || exit /b 0
+
+    - name: Upload library artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: libs-windows
+        path: |
+          target/release/libdriftwave_core.*
+          target/release/libdriftwave_cpal.*
+          target/release/libdriftwave_fmod.*
+          target/release/driftwave_core.*
+          target/release/driftwave_cpal.*
+          target/release/driftwave_fmod.*
+
+    - name: Upload crate packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: crates-windows
         path: crate-artifacts/*.crate
 
   fmt:
