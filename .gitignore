@@ -1,16 +1,23 @@
+# macOS
 .DS_Store
-/target
-/src-core/target
-/src-fmod/target
-/src-web/target
-/src-web/pkg
-/src-web/Cargo.lock
-/tools/target
+
+# Rust
+**/target
 **/*.rs.bk
 *.pdb
+Cargo.lock
+
+# WASM
+/src-web/pkg
+/src-web/Cargo.lock
+/wasm-artifact
+
+# JavaScript/TypeScript
+/js/node_modules
+/js/dist
+/js/package-lock.json
+
+# General
 *.log
 *.bak
 *.tgz
-/wasm-artifact
-
-

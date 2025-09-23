@@ -1,0 +1,30 @@
+{
+  "name": "driftwave",
+  "version": "0.1.0",
+  "description": "Audio waveform renderer with playback",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "driftwave-web": "file:../src-web/pkg"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "audio",
+    "waveform",
+    "visualization",
+    "webassembly",
+    "wasm"
+  ],
+  "author": "",
+  "license": "MIT"
+}

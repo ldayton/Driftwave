@@ -45,9 +45,7 @@ An audio waveform renderer with playback that's "stupid easy" to consume from an
 ## Javascript usage
 
 ```javascript
-const driftwave = Driftwave.create({
-  container: '#waveform'
-});
+const driftwave = await Driftwave.create();
 driftwave.load('audio.mp3');
 driftwave.on('ready', () => driftwave.play());
 ```

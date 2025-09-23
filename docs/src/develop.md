@@ -7,13 +7,13 @@
 All platforms:
 - [Rustup](https://rustup.rs)
 
-For WASM support:
+For web support:
 ```bash
 rustup target add wasm32-unknown-unknown
 cargo install wasm-pack
 ```
 
-### Build
+### Build native
 
 ```bash
 # Build all workspace members (core, fmod, tools)
@@ -23,18 +23,29 @@ cargo build
 cargo build -p driftwave-core    # Core traits and types
 cargo build -p driftwave-fmod    # FMOD audio implementation
 
-# Build WASM module for web
-cd src-web && wasm-pack build --target web --out-dir pkg
-
 # Build release mode
 cargo build --release
+```
+
+### Build web
+
+```bash
+# Build WASM module
+cd src-web
+wasm-pack build --release --target web --out-dir pkg
+
+# Build NPM package
+cd ../js
+npm install
+npm run build
 ```
 
 ## Project Structure
 
 - `src-core/` - Core traits and shared types (Player trait, etc.)
 - `src-fmod/` - FMOD audio implementation for desktop
-- `src-web/` - Web Audio API implementation (WASM, not in workspace)
+- `src-web/` - Web bindings (WASM, not in workspace)
+- `js/` - JavaScript/TypeScript wrapper for NPM
 - `tools/` - Build utilities and code generation
 - `examples/` - Standalone example applications
 
