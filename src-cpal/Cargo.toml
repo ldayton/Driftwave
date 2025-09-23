@@ -7,7 +7,7 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
-driftwave-core = { path = "../src-core" }
+driftwave-core = { version = "0.1.0", path = "../src-core" }
 cpal = "0.15"
 hound = "3.5"
 symphonia = { version = "0.5", features = ["all"] }
