@@ -52,6 +52,14 @@ jobs:
     - name: Build release
       run: cargo build --release --verbose
 
+    - name: Package crates
+      run: |
+        cargo package -p driftwave-core --no-verify
+        cargo package -p driftwave-cpal --no-verify
+        cargo package -p driftwave-fmod --no-verify
+        mkdir -p crate-artifacts
+        cp target/package/*.crate crate-artifacts/
+
     - name: List all artifacts (Linux/macOS)
       if: matrix.os != 'windows-latest'
       run: |
@@ -65,7 +73,7 @@ jobs:
         echo === Release artifacts ===
         dir target\release\*.lib target\release\*.dll target\release\*.rlib 2>nul || exit /b 0
 
-    - name: Upload core library artifacts
+    - name: Upload library artifacts
       uses: actions/upload-artifact@v4
       with:
         name: libs-${{ matrix.os }}
@@ -76,7 +84,12 @@ jobs:
           target/release/driftwave_core.*
           target/release/driftwave_cpal.*
           target/release/driftwave_fmod.*
-          target/release/*.rlib
+
+    - name: Upload crate packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: crates-${{ matrix.os }}
+        path: crate-artifacts/*.crate
 
   fmt:
     name: Rustfmt
@@ -138,13 +151,30 @@ jobs:
         path: ~/.cargo/git
         key: ${{ runner.os }}-cargo-wasm-index-${{ hashFiles('**/Cargo.lock') }}
 
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
     - name: Build WASM module
       run: |
         cd src-web
-        wasm-pack build --target web --out-dir pkg
+        wasm-pack build --release --target web --out-dir ../js/wasm
 
-    - name: Upload WASM package
+    - name: Build NPM package
+      run: |
+        cd js
+        npm install
+        npm run build
+
+    - name: Create NPM package
+      run: |
+        cd js
+        npm pack
+        mv *.tgz ../driftwave-npm.tgz
+
+    - name: Upload NPM package
       uses: actions/upload-artifact@v4
       with:
-        name: driftwave-wasm
-        path: src-web/pkg/
+        name: driftwave-npm
+        path: driftwave-npm.tgz

@@ -15,6 +15,7 @@ Cargo.lock
 # JavaScript/TypeScript
 /js/node_modules
 /js/dist
+/js/wasm
 /js/package-lock.json
 
 # General

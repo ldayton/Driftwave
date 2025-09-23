@@ -10,11 +10,10 @@
     "prepare": "npm run build"
   },
   "files": [
-    "dist"
+    "dist",
+    "wasm"
   ],
-  "dependencies": {
-    "driftwave-web": "file:../src-web/pkg"
-  },
+  "dependencies": {},
   "devDependencies": {
     "typescript": "^5.0.0"
   },

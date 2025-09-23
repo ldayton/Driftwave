@@ -1,4 +1,4 @@
-import init, { Driftwave as WasmDriftwave } from 'driftwave-web';
+import init, { Driftwave as WasmDriftwave } from '../wasm/driftwave_web.js';
 
 class Driftwave {
   private wasm: WasmDriftwave | null = null;

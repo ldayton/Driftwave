@@ -30,14 +30,17 @@ cargo build --release
 ### Build web
 
 ```bash
-# Build WASM module
+# Build WASM module into js package
 cd src-web
-wasm-pack build --release --target web --out-dir pkg
+wasm-pack build --release --target web --out-dir ../js/wasm
 
 # Build NPM package
 cd ../js
 npm install
 npm run build
+
+# Create publishable package
+npm pack  # Creates driftwave-x.x.x.tgz
 ```
 
 ## Project Structure
