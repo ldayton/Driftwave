@@ -1,4 +1,4 @@
-import init, { Driftwave as WasmDriftwave } from '../pkg/driftwave_web.js';
+import init, { Driftwave as WasmDriftwave } from '../wasm/driftwave_web.js';
 
 interface Metadata {
   sampleRate: number;
