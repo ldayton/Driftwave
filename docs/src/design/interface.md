@@ -12,9 +12,8 @@ An audio waveform renderer with playback that's "stupid easy" to consume from an
   - Rasterized output for CPU-based rendering
   - Optional phase-locked loop smoothing 
 - 🔊 Pluggable audio implementations:
-  - CPAL for native
+  - FMOD for native
   - Web Audio for web
-  - Bindings provided for FMOD
   - Bring-your-own (JUCE, PortAudio, etc)
 
 ## Architecture

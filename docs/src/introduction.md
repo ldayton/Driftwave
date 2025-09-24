@@ -23,7 +23,7 @@ Most waveform tools compromise on either precision or portability. Driftwave doe
 - **Cross-Platform by Design**:
   - 🌐 WebAssembly bundles for browsers, for web audio
   - 🖥️ Native runtimes on macOS, Windows, and Linux
-  - 🔊 Default playback with CPAL, with FMOD and PortAudio bindings also provided
+  - 🔊 Default native playback with FMOD
 - **🔍 Built for Analysis**: Not just pretty graphics—an engine ready for phonetics research, bioacoustics, and industrial signal analysis with sample-level precision.
 
 ## Technology

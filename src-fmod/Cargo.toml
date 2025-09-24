@@ -9,6 +9,7 @@ repository.workspace = true
 [dependencies]
 driftwave-core = { version = "0.1.0", path = "../src-core" }
 libloading = "0.8"
+async-trait = "0.1"
 
 [lib]
 name = "driftwave_fmod"

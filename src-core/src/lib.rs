@@ -1,3 +1,3 @@
 pub mod player;
 
-pub use player::{PlaybackListener, PlaybackState, Player, PlayerError};
+pub use player::{Metadata, PlaybackListener, PlaybackState, Player, PlayerError};

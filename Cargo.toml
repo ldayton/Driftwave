@@ -8,7 +8,6 @@ repository = "https://github.com/ldayton/Driftwave"
 [workspace]
 members = [
     "src-core",
-    "src-cpal",
     "src-fmod",
     "tools"
 ]

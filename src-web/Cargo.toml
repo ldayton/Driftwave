@@ -2,6 +2,9 @@
 name = "driftwave-web"
 version = "0.1.0"
 edition = "2024"
+description = "Web Audio player for Driftwave"
+repository = "https://github.com/ldayton/Driftwave"
+license = "MIT"
 
 [lib]
 crate-type = ["cdylib"]
@@ -11,6 +14,7 @@ driftwave-core = { path = "../src-core" }
 wasm-bindgen = "0.2"
 wasm-bindgen-futures = "0.4"
 js-sys = "0.3"
+async-trait = "0.1"
 web-sys = { version = "0.3", features = [
     "console",
     "Window",
@@ -19,5 +23,10 @@ web-sys = { version = "0.3", features = [
     "AudioBufferSourceNode",
     "AudioDestinationNode",
     "AudioNode",
+    "Request",
+    "RequestInit",
+    "RequestMode",
+    "Response",
+    "Headers",
 ] }
 console_error_panic_hook = "0.1"
