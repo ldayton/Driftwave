@@ -22,10 +22,6 @@ pub struct FmodPlayer {
     system: *mut fmod_sys::FMOD_SYSTEM,
 }
 
-// We're using FMOD_INIT_THREAD_UNSAFE - client must handle synchronization
-unsafe impl Send for FmodPlayer {}
-unsafe impl Sync for FmodPlayer {}
-
 impl Default for FmodPlayer {
     fn default() -> Self {
         Self::new()
@@ -78,7 +74,6 @@ impl FmodPlayer {
                 });
             }
 
-            // Set end delay if we have an end_frame
             if let Some(end) = end_frame {
                 let mut parent_clock: u64 = 0;
                 let result =
@@ -101,12 +96,10 @@ impl FmodPlayer {
                 }
             }
 
-            // If we have a listener, create and attach a DSP for progress callbacks
             let mut dsp: *mut fmod_sys::FMOD_DSP = ptr::null_mut();
             let mut callback_data: *mut dsp::DspCallbackData = ptr::null_mut();
 
             if let Some(listener_box) = listener {
-                // Create DSP description
                 let mut dspdesc: fmod_sys::FMOD_DSP_DESCRIPTION = std::mem::zeroed();
                 dspdesc.pluginsdkversion = fmod_sys::FMOD_PLUGIN_SDK_VERSION;
                 let name = b"Progress Tracker\0";
@@ -120,25 +113,20 @@ impl FmodPlayer {
                 dspdesc.numoutputbuffers = 1;
                 dspdesc.read = Some(dsp::progress_dsp_callback);
 
-                // Create the DSP
                 let result = fmod_sys::FMOD_System_CreateDSP(self.system, &dspdesc, &mut dsp);
                 if result != fmod_sys::FMOD_RESULT_FMOD_OK {
                     return Err(PlayerError {
                         message: format!("Failed to create DSP: {}", result),
                     });
                 }
-
-                // Create callback data
                 callback_data = Box::into_raw(Box::new(dsp::DspCallbackData {
                     listener: Some(listener_box),
                     channel,
                 }));
 
-                // Set user data on the DSP
                 let result =
                     fmod_sys::FMOD_DSP_SetUserData(dsp, callback_data as *mut std::ffi::c_void);
                 if result != fmod_sys::FMOD_RESULT_FMOD_OK {
-                    // Clean up
                     drop(Box::from_raw(callback_data));
                     fmod_sys::FMOD_DSP_Release(dsp);
                     return Err(PlayerError {
@@ -146,10 +134,8 @@ impl FmodPlayer {
                     });
                 }
 
-                // Add DSP to channel
                 let result = fmod_sys::FMOD_Channel_AddDSP(channel, 0, dsp);
                 if result != fmod_sys::FMOD_RESULT_FMOD_OK {
-                    // Clean up
                     drop(Box::from_raw(callback_data));
                     fmod_sys::FMOD_DSP_Release(dsp);
                     return Err(PlayerError {
@@ -158,7 +144,6 @@ impl FmodPlayer {
                 }
             }
 
-            // Unpause after everything is set up
             let result = fmod_sys::FMOD_Channel_SetPaused(channel, 0);
             if result != fmod_sys::FMOD_RESULT_FMOD_OK {
                 return Err(PlayerError {
@@ -276,7 +261,6 @@ impl Player for FmodPlayer {
 
     fn get_metadata(&mut self, sound: &mut Self::Sound) -> Result<Metadata, PlayerError> {
         unsafe {
-            // Get channel count
             let mut sound_type: fmod_sys::FMOD_SOUND_TYPE = 0;
             let mut format: fmod_sys::FMOD_SOUND_FORMAT = 0;
             let mut channels: i32 = 0;
@@ -294,7 +278,6 @@ impl Player for FmodPlayer {
                 });
             }
 
-            // Get sample rate
             let mut sample_rate: f32 = 0.0;
             let mut priority: i32 = 0;
             let result =
@@ -305,7 +288,6 @@ impl Player for FmodPlayer {
                 });
             }
 
-            // Get length in PCM samples
             let mut length: u32 = 0;
             let result =
                 fmod_sys::FMOD_Sound_GetLength(sound.ptr, &mut length, fmod_sys::FMOD_TIMEUNIT_PCM);
@@ -366,10 +348,6 @@ pub struct FmodSound {
     ptr: *mut fmod_sys::FMOD_SOUND,
 }
 
-// We're using FMOD_INIT_THREAD_UNSAFE - client must handle synchronization
-unsafe impl Send for FmodSound {}
-unsafe impl Sync for FmodSound {}
-
 impl Drop for FmodSound {
     fn drop(&mut self) {
         if !self.ptr.is_null() {
@@ -389,14 +367,9 @@ pub struct FmodPlayback {
     callback_data: *mut dsp::DspCallbackData,
 }
 
-// We're using FMOD_INIT_THREAD_UNSAFE - client must handle synchronization
-unsafe impl Send for FmodPlayback {}
-unsafe impl Sync for FmodPlayback {}
-
 impl Drop for FmodPlayback {
     fn drop(&mut self) {
         unsafe {
-            // Stop the channel if it's still valid
             if !self.ptr.is_null() {
                 let result = fmod_sys::FMOD_Channel_Stop(self.ptr);
                 if result != fmod_sys::FMOD_RESULT_FMOD_OK
