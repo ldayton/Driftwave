@@ -6,7 +6,7 @@ use std::sync::Mutex;
 use tauri::{Manager, path::BaseDirectory};
 
 use driftwave_core::Player;
-use driftwave_cpal::CpalPlayer;
+use driftwave_fmod::FmodPlayer;
 
 #[tauri::command]
 pub fn log_to_file(message: String) -> Result<(), String> {
@@ -31,7 +31,7 @@ pub fn log_to_file(message: String) -> Result<(), String> {
 #[tauri::command]
 pub fn play_audio(
     app_handle: tauri::AppHandle,
-    state: tauri::State<AudioState>,
+    state: tauri::State<'_, AudioState>,
 ) -> Result<String, String> {
     // Log the call
     let _ = log_to_file(format!("[BACKEND] play_audio command called"));
@@ -56,7 +56,8 @@ pub fn play_audio(
 
     // Load sound if not already loaded or if path changed
     if current_sound.is_none() {
-        let sound = player.load(&resource_path).map_err(|e| e.to_string())?;
+        let path_str = resource_path.to_str().ok_or_else(|| "Invalid path".to_string())?;
+        let sound = futures::executor::block_on(player.load(path_str)).map_err(|e| e.to_string())?;
         *current_sound = Some(sound);
     }
 
@@ -89,16 +90,16 @@ pub fn stop_audio(state: tauri::State<AudioState>) -> Result<String, String> {
     }
 }
 
-// Audio state with CPAL player
+// Audio state with FMOD player
 pub struct AudioState {
-    player: Mutex<CpalPlayer>,
-    current_sound: Mutex<Option<<CpalPlayer as Player>::Sound>>,
-    current_playback: Mutex<Option<<CpalPlayer as Player>::Playback>>,
+    player: Mutex<FmodPlayer>,
+    current_sound: Mutex<Option<<FmodPlayer as Player>::Sound>>,
+    current_playback: Mutex<Option<<FmodPlayer as Player>::Playback>>,
 }
 
 impl AudioState {
     pub fn new() -> Result<Self, String> {
-        let mut player = CpalPlayer::new();
+        let mut player = FmodPlayer::new();
         player.init().map_err(|e| e.to_string())?;
 
         Ok(Self {
