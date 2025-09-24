@@ -77,17 +77,24 @@
       }
     }
 
-    loadBtn.addEventListener('click', () => {
+    loadBtn.addEventListener('click', async () => {
       if (!driftwave) return;
 
       status.textContent = 'Loading audio...';
-      // Using our S3 bucket with CORS enabled
-      driftwave.load('https://driftwave-assets.s3.amazonaws.com/אני%20פורים.wav');
-
-      driftwave.on('ready', () => {
+      try {
+        // Using our S3 bucket with CORS enabled
+        await driftwave.load('https://driftwave-assets.s3.amazonaws.com/אני%20פורים.wav');
         status.textContent = 'Audio loaded - ready to play';
         playBtn.disabled = false;
-      });
+
+        const metadata = driftwave.getMetadata();
+        if (metadata) {
+          status.textContent += ` | ${metadata.sampleRate}Hz, ${metadata.channelCount} channels, ${Math.round(metadata.frameCount / metadata.sampleRate * 100) / 100}s`;
+        }
+      } catch (error) {
+        status.textContent = `Error loading audio: ${error}`;
+        console.error(error);
+      }
     });
 
     playBtn.addEventListener('click', () => {
@@ -101,8 +108,8 @@
 
     pauseBtn.addEventListener('click', () => {
       if (!driftwave) return;
-      // Note: pause not implemented yet in our basic version
-      status.textContent = 'Paused (not implemented)';
+      const frame = driftwave.pause();
+      status.textContent = `Paused at frame ${frame}`;
       playBtn.disabled = false;
       pauseBtn.disabled = true;
       isPlaying = false;

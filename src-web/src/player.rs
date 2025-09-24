@@ -170,6 +170,9 @@ impl Player for WebPlayer {
         let audio_buffer: AudioBuffer = audio_buffer.dyn_into().map_err(|e| PlayerError {
             message: format!("Invalid audio buffer type: {:?}", e),
         })?;
+        // TODO: This returns the AudioContext's sample rate (typically 48000Hz), not the
+        // original file's sample rate. Need to parse audio file headers before decoding
+        // to get the actual source sample rate.
         let sample_rate = audio_buffer.sample_rate();
         let channels = audio_buffer.number_of_channels();
         let frame_count = audio_buffer.length();

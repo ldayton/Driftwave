@@ -1,4 +1,10 @@
-import init, { Driftwave as WasmDriftwave } from '../wasm/driftwave_web.js';
+import init, { Driftwave as WasmDriftwave } from '../pkg/driftwave_web.js';
+
+interface Metadata {
+  sampleRate: number;
+  channelCount: number;
+  frameCount: number;
+}
 
 class Driftwave {
   private wasm: WasmDriftwave | null = null;
@@ -13,25 +19,55 @@ class Driftwave {
     return instance;
   }
 
-  load(url: string): void {
+  async load(url: string): Promise<void> {
     if (!this.wasm) return;
 
-    fetch(url)
-      .then(response => response.arrayBuffer())
-      .then(arrayBuffer => {
-        if (!this.wasm) return;
-        return this.wasm.decode_audio_data(arrayBuffer);
-      })
-      .then(audioBuffer => {
-        if (!this.wasm) return;
-        this.wasm.set_buffer(audioBuffer);
-        this.emit('ready');
-      });
+    try {
+      await this.wasm.load_async(url);
+      this.emit('ready');
+    } catch (error) {
+      this.emit('error', error);
+      throw error;
+    }
   }
 
   play(): void {
     if (!this.wasm) return;
     this.wasm.play();
+    this.emit('play');
+  }
+
+  playFrom(startFrame: number): void {
+    if (!this.wasm) return;
+    this.wasm.play_from(startFrame);
+    this.emit('play');
+  }
+
+  playRange(startFrame: number, endFrame: number): void {
+    if (!this.wasm) return;
+    this.wasm.play_range(startFrame, endFrame);
+    this.emit('play');
+  }
+
+  pause(): number | null {
+    if (!this.wasm) return null;
+    const frame = this.wasm.pause();
+    this.emit('pause', frame);
+    return frame;
+  }
+
+  isPlaying(): boolean {
+    if (!this.wasm) return false;
+    return this.wasm.is_playing();
+  }
+
+  getMetadata(): Metadata | null {
+    if (!this.wasm) return null;
+    try {
+      return this.wasm.get_metadata();
+    } catch {
+      return null;
+    }
   }
 
   on(event: string, callback: Function): void {
@@ -39,9 +75,18 @@ class Driftwave {
     this.listeners[event].push(callback);
   }
 
-  private emit(event: string): void {
+  off(event: string, callback?: Function): void {
     if (!this.listeners[event]) return;
-    this.listeners[event].forEach(callback => callback());
+    if (callback) {
+      this.listeners[event] = this.listeners[event].filter(cb => cb !== callback);
+    } else {
+      delete this.listeners[event];
+    }
+  }
+
+  private emit(event: string, ...args: any[]): void {
+    if (!this.listeners[event]) return;
+    this.listeners[event].forEach(callback => callback(...args));
   }
 }
 
