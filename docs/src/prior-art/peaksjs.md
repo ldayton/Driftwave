@@ -3,7 +3,7 @@
 ## Overview
 Peaks.js provides a client-side JavaScript SDK for displaying and interacting with audio waveforms in web browsers. The library uses a canvas-based rendering approach with Konva.js and follows a modular, event-driven architecture.
 
-## Core Architecture
+## 1. Core Architecture
 
 ```mermaid
 classDiagram
@@ -169,10 +169,53 @@ classDiagram
     MediaElementPlayer --|> Player : implements
 ```
 
-## Event System
+## 2. Plugin Architecture
+
+```mermaid
+classDiagram
+    class Peaks {
+        <<No Plugin System>>
+        +segments: WaveformSegments
+        +points: WaveformPoints
+        +views: ViewController
+        +zoom: ZoomController
+    }
+
+    note for Peaks "Peaks.js uses a modular architecture\nwith built-in components rather than\na plugin system"
+```
+
+## 3. Event System
 
 ```mermaid
 graph TB
+    subgraph "Lifecycle Events"
+        peaks.ready[peaks.ready]
+        cue.enter[cue.enter]
+        cue.exit[cue.exit]
+    end
+
+    subgraph "Playback Events"
+        player.canplay[player.canplay]
+        player.playing[player.playing]
+        player.pause[player.pause]
+        player.seeked[player.seeked]
+        player.ended[player.ended]
+        player.timeupdate[player.timeupdate]
+    end
+
+    subgraph "Interaction Events"
+        zoomview.click[zoomview.click]
+        zoomview.dblclick[zoomview.dblclick]
+        zoomview.contextmenu[zoomview.contextmenu]
+        overview.click[overview.click]
+        overview.dblclick[overview.dblclick]
+        overview.contextmenu[overview.contextmenu]
+    end
+
+    subgraph "View Events"
+        zoom.update[zoom.update]
+    end
+
     subgraph "Point Events"
         points.add[points.add]
         points.remove[points.remove]
@@ -206,34 +249,9 @@ graph TB
         segments.enter[segments.enter]
         segments.exit[segments.exit]
     end
-
-    subgraph "View Events"
-        zoomview.click[zoomview.click]
-        zoomview.dblclick[zoomview.dblclick]
-        zoomview.contextmenu[zoomview.contextmenu]
-        overview.click[overview.click]
-        overview.dblclick[overview.dblclick]
-        overview.contextmenu[overview.contextmenu]
-        zoom.update[zoom.update]
-    end
-
-    subgraph "Player Events"
-        player.canplay[player.canplay]
-        player.playing[player.playing]
-        player.pause[player.pause]
-        player.seeked[player.seeked]
-        player.ended[player.ended]
-        player.timeupdate[player.timeupdate]
-    end
-
-    subgraph "Lifecycle Events"
-        peaks.ready[peaks.ready]
-        cue.enter[cue.enter]
-        cue.exit[cue.exit]
-    end
 ```
 
-## Rendering Architecture
+## 4. Rendering Architecture
 
 ```mermaid
 classDiagram
@@ -301,7 +319,7 @@ classDiagram
     WaveformView --> KonvaStage : uses
 ```
 
-## Configuration Options
+## 5. Configuration Options
 
 ```mermaid
 graph LR

@@ -3,7 +3,7 @@
 ## Overview
 WaveSurfer.js provides a comprehensive JavaScript interface for audio waveform visualization and interaction. The library follows an object-oriented architecture with event-driven communication patterns.
 
-## Core Architecture
+## 1. Core Architecture
 
 ```mermaid
 classDiagram
@@ -123,47 +123,7 @@ classDiagram
     WaveSurfer --> WebAudioPlayer : optional backend
 ```
 
-## Event System
-
-```mermaid
-graph TB
-    subgraph "Lifecycle Events"
-        init[init]
-        load[load]
-        loading[loading %]
-        decode[decode]
-        ready[ready]
-        destroy[destroy]
-        error[error]
-    end
-
-    subgraph "Playback Events"
-        play[play]
-        pause[pause]
-        finish[finish]
-        timeupdate[timeupdate]
-        audioprocess[audioprocess]
-        seeking[seeking]
-    end
-
-    subgraph "Interaction Events"
-        click[click]
-        dblclick[dblclick]
-        interaction[interaction]
-        drag[drag]
-        dragstart[dragstart]
-        dragend[dragend]
-    end
-
-    subgraph "View Events"
-        redraw[redraw]
-        redrawcomplete[redrawcomplete]
-        scroll[scroll]
-        zoom[zoom]
-    end
-```
-
-## Plugin Architecture
+## 2. Plugin Architecture
 
 ```mermaid
 classDiagram
@@ -224,7 +184,86 @@ classDiagram
     RegionsPlugin --> Region : manages
 ```
 
-## Configuration Options
+## 3. Event System
+
+```mermaid
+graph TB
+    subgraph "Lifecycle Events"
+        init[init]
+        load[load]
+        loading[loading %]
+        decode[decode]
+        ready[ready]
+        destroy[destroy]
+        error[error]
+    end
+
+    subgraph "Playback Events"
+        play[play]
+        pause[pause]
+        finish[finish]
+        timeupdate[timeupdate]
+        audioprocess[audioprocess]
+        seeking[seeking]
+    end
+
+    subgraph "Interaction Events"
+        click[click]
+        dblclick[dblclick]
+        interaction[interaction]
+        drag[drag]
+        dragstart[dragstart]
+        dragend[dragend]
+    end
+
+    subgraph "View Events"
+        redraw[redraw]
+        redrawcomplete[redrawcomplete]
+        scroll[scroll]
+        zoom[zoom]
+    end
+```
+
+## 4. Rendering Architecture
+
+```mermaid
+classDiagram
+    class Renderer {
+        -options: RendererOptions
+        -audioElement: HTMLMediaElement
+        +render(audioBuffer)
+        +renderProgress(progress, isPlaying)
+        +zoom(minPxPerSec)
+        +setOptions(options)
+        +getWrapper(): HTMLElement
+        +getScroll(): number
+        +setScroll(pixels)
+        +exportImage(): Promise
+        +destroy()
+    }
+
+    class CanvasRenderer {
+        <<Note>>
+        +drawWaveform()
+        +drawProgress()
+        +clearCanvas()
+    }
+
+    class HTMLRenderer {
+        <<Note>>
+        +createBars()
+        +updateProgress()
+    }
+
+    note for CanvasRenderer "WaveSurfer uses either Canvas
+or HTML rendering, not a
+layered approach like Peaks.js"
+
+    Renderer <|-- CanvasRenderer
+    Renderer <|-- HTMLRenderer
+```
+
+## 5. Configuration Options
 
 ```mermaid
 graph LR
