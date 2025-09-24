@@ -50,9 +50,9 @@ jobs:
 
     - name: Package crates
       run: |
+        # Only package driftwave-core since other crates depend on it
+        # and it's not published to crates.io yet
         cargo package -p driftwave-core --no-verify
-        cargo package -p driftwave-cpal --no-verify
-        cargo package -p driftwave-fmod --no-verify
         mkdir -p crate-artifacts
         cp target/package/*.crate crate-artifacts/
 
@@ -118,9 +118,9 @@ jobs:
 
     - name: Package crates
       run: |
+        # Only package driftwave-core since other crates depend on it
+        # and it's not published to crates.io yet
         cargo package -p driftwave-core --no-verify
-        cargo package -p driftwave-cpal --no-verify
-        cargo package -p driftwave-fmod --no-verify
         mkdir -p crate-artifacts
         cp target/package/*.crate crate-artifacts/
 
@@ -186,9 +186,9 @@ jobs:
 
     - name: Package crates
       run: |
+        # Only package driftwave-core since other crates depend on it
+        # and it's not published to crates.io yet
         cargo package -p driftwave-core --no-verify
-        cargo package -p driftwave-cpal --no-verify
-        cargo package -p driftwave-fmod --no-verify
         mkdir -p crate-artifacts
         cp target/package/*.crate crate-artifacts/
 

@@ -3,15 +3,15 @@
 	Driftwave
 </h1>
 
-## Waveform visualization that's fast, accurate, and portable
+## Audio waveform visualization that's fast, accurate, and portable
 
 <p align="center">
-  <a href="https://github.com/ldayton/Driftwave/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/ldayton/Driftwave/ci.yml/wasm?style=for-the-badge&label=WASM&color=brightgreen&logoColor=white"></a>
-  <a href="https://github.com/ldayton/Driftwave/actions/workflows/docs.yml"><img src="https://img.shields.io/github/actions/workflow/status/ldayton/Driftwave/docs.yml?style=for-the-badge&label=Docs&color=brightgreen&logoColor=white"></a>
+  <a href="https://github.com/ldayton/Driftwave/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/ldayton/Driftwave/ci.yml?job=wasm&style=for-the-badge&label=WASM"></a>
+  <a href="https://github.com/ldayton/Driftwave/actions/workflows/docs.yml"><img src="https://img.shields.io/github/actions/workflow/status/ldayton/Driftwave/docs.yml?style=for-the-badge&label=Docs"></a>
   <br>
-  <a href="https://github.com/ldayton/Driftwave/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/ldayton/Driftwave/ci.yml/windows?style=for-the-badge&label=Windows&color=brightgreen&logoColor=white"></a>
-  <a href="https://github.com/ldayton/Driftwave/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/ldayton/Driftwave/ci.yml/macos?style=for-the-badge&label=Mac&color=brightgreen&logoColor=white"></a>
-  <a href="https://github.com/ldayton/Driftwave/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/ldayton/Driftwave/ci.yml/linux?style=for-the-badge&label=Linux&color=brightgreen&logoColor=white"></a>
+  <a href="https://github.com/ldayton/Driftwave/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/ldayton/Driftwave/ci.yml?job=windows&style=for-the-badge&label=Windows"></a>
+  <a href="https://github.com/ldayton/Driftwave/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/ldayton/Driftwave/ci.yml?job=macos&style=for-the-badge&label=Mac"></a>
+  <a href="https://github.com/ldayton/Driftwave/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/ldayton/Driftwave/ci.yml?job=linux&style=for-the-badge&label=Linux"></a>
 </p>
 
 <p>
