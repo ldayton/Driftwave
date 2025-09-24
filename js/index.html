@@ -81,8 +81,8 @@
       if (!driftwave) return;
 
       status.textContent = 'Loading audio...';
-      // For demo, using a public audio file
-      driftwave.load('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
+      // Using our S3 bucket with CORS enabled
+      driftwave.load('https://driftwave-assets.s3.amazonaws.com/אני%20פורים.wav');
 
       driftwave.on('ready', () => {
         status.textContent = 'Audio loaded - ready to play';
